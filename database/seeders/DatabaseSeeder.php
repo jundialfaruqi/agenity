@@ -278,8 +278,8 @@ class DatabaseSeeder extends Seeder
             ['id' => 1],
             [
                 'app_name' => 'Agenity',
-                'login_title' => '🔐 Login Admin',
-                'login_description' => 'Agenty - Digital Agenda & Attendance Identity System',
+                'login_title' => '🔐 Login Agenity',
+                'login_description' => 'Agenity - Digital Agenda & Attendance Identity System',
             ]
         );
         $this->command->info('✔ App settings initialized.');
