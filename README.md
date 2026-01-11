@@ -1,6 +1,6 @@
-# 🚀 Monetra: Gerbang Manajemen User & Role Anda
+# 🚀 Agenity: Digital Agenda & Attendance Identity System
 
-Selamat datang di **Monetra**, sebuah aplikasi manajemen hak akses yang dirancang dengan presisi untuk memberikan kendali penuh atas sistem Anda. Monetra dibangun dengan pondasi teknologi modern yang menjamin kecepatan, keamanan, dan pengalaman pengguna yang luar biasa.
+**Agenity** adalah sistem identitas digital yang dirancang khusus untuk mengelola agenda kerja dan kehadiran secara terintegrasi. Dengan fokus pada manajemen hak akses dan struktur organisasi (OPD), Agenity memberikan solusi modern untuk efisiensi birokrasi dan akuntabilitas data dalam satu platform yang aman dan responsif.
 
 ---
 
@@ -22,17 +22,18 @@ Aplikasi ini ditenagai oleh kombinasi _tech stack_ mutakhir:
 ## ✨ Fitur Utama
 
 -   **Manajemen User & Role:** Kontrol penuh menggunakan Spatie Laravel Permission dengan UI yang intuitif.
+-   **Manajemen OPD (Organisasi Perangkat Daerah):** Pengelolaan data master OPD yang terintegrasi dengan user.
 -   **Profil Dinamis:** Halaman profil modern dengan fitur upload foto profil dan banner secara real-time.
 -   **Pengaturan Aplikasi (App Settings):** Kustomisasi nama aplikasi, logo, serta judul dan deskripsi halaman login langsung dari dashboard (Tab Settings di Profil).
 -   **UI Modern & Responsif:** Dibangun dengan Tailwind CSS dan DaisyUI untuk pengalaman pengguna yang maksimal di berbagai perangkat.
 -   **Sistem Notifikasi Toast:** Feedback instan yang elegan untuk setiap aksi pengguna.
--   **Automated Maintenance:** Pembersihan otomatis file storage lama dan pengecekan storage link yang terintegrasi dalam sistem seeder.
+-   **Automated Maintenance:** Pembersihan otomatis file storage lama (avatars, banners, logos, opd_logos) dan pengecekan storage link yang terintegrasi dalam sistem seeder.
 
 ---
 
 ## 🏗 Panduan Setup (Langkah demi Langkah)
 
-Ikuti perjalanan singkat ini untuk menghidupkan Monetra di mesin lokal Anda:
+Ikuti perjalanan singkat ini untuk menghidupkan Agenity di mesin lokal Anda:
 
 ### 1. Mempersiapkan Bahan Baku
 
@@ -62,7 +63,7 @@ php artisan key:generate
 
 ### 4. Membangun Struktur & Menanam Data Dasar
 
-Langkah krusial! Kita akan membangun tabel database dan mengisi data awal (Permissions, Roles, & Users) yang sudah kita rancang dengan apik:
+Langkah krusial! Kita akan membangun tabel database dan mengisi data awal (Permissions, Roles, OPD, & Users) yang sudah kita rancang dengan apik:
 
 ```bash
 php artisan migrate --seed
@@ -78,7 +79,8 @@ Step 0: Pre-seeding Cleanup & Checks...
 ✔ Storage link verified.
 ✔ Cleaned avatars directory.
 ✔ Cleaned banners directory.
-✔ logo directory is already clean.
+✔ Cleaned logo directory.
+✔ Cleaned opd_logos directory.
 
 Step 1: Creating Permissions...
 ✔ Permissions created successfully.
@@ -90,7 +92,10 @@ Step 3: Syncing Permissions...
 ✔ All permissions synced to Super Admin.
 ✔ Example permissions synced to User Example Role.
 
-Step 4: Creating Users & Assigning Roles...
+Step 4: Creating OPD Masters...
+✔ OPD Masters created successfully.
+
+Step 5: Creating Users & Assigning Roles...
 +--------------+---------------------+----------+--------------+--------+
 | Name         | Email               | Password | Role         | Status |
 +--------------+---------------------+----------+--------------+--------+
@@ -102,7 +107,7 @@ Step 4: Creating Users & Assigning Roles...
 
 ✨ Database Seeding Completed Successfully! ✨
 
-Step 5: Initializing App Settings...
+Step 6: Initializing App Settings...
 ✔ App settings initialized.
 ```
 
@@ -126,7 +131,7 @@ php artisan serve
 
 ## 🌐 Akses Aplikasi
 
-Setelah mesin menyala, Monetra siap dijelajahi:
+Setelah mesin menyala, Agenity siap dijelajahi:
 
 -   **URL Utama:** [http://localhost:8000/](http://localhost:8000/)
 -   **Pintu Masuk (Login):** [http://localhost:8000/login](http://localhost:8000/login)
@@ -135,7 +140,7 @@ Setelah mesin menyala, Monetra siap dijelajahi:
 
 ## 🔐 API Documentation (Sanctum)
 
-Monetra juga dilengkapi dengan API Auth yang siap digunakan untuk integrasi aplikasi pihak ketiga atau mobile:
+Agenity juga dilengkapi dengan API Auth yang siap digunakan untuk integrasi aplikasi pihak ketiga atau mobile:
 
 ### 📖 Dokumentasi Interaktif
 
