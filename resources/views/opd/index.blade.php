@@ -43,7 +43,7 @@
                 <div class="card-body p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h2 class="card-title text-sm text-base-content/60 font-medium uppercase tracking-wider">
+                            <h2 class="card-title text-sm text-base-content/60 font-medium">
                                 Total OPD</h2>
                             <div class="flex items-center gap-2 mt-2">
                                 <span class="text-2xl font-bold">{{ $stats['total'] ?? 0 }}</span>
@@ -66,7 +66,7 @@
                 <div class="card-body p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h2 class="card-title text-sm text-base-content/60 font-medium uppercase tracking-wider">
+                            <h2 class="card-title text-sm text-base-content/60 font-medium">
                                 Total Users</h2>
                             <div class="flex items-center gap-2 mt-2">
                                 <span class="text-2xl font-bold">{{ $stats['total_users'] ?? 0 }}</span>
@@ -89,8 +89,7 @@
                 <div class="card-body p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h2 class="card-title text-sm text-base-content/60 font-medium uppercase tracking-wider">OPD
-                                Baru</h2>
+                            <h2 class="card-title text-sm text-base-content/60 font-medium">OPD Baru</h2>
                             <div class="flex items-center gap-2 mt-2">
                                 <span class="text-2xl font-bold text-success">{{ $stats['new_this_month'] ?? 0 }}</span>
                                 <span class="text-xs text-base-content/50">Bulan ini</span>
@@ -112,8 +111,7 @@
                 <div class="card-body p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h2 class="card-title text-sm text-base-content/60 font-medium uppercase tracking-wider">
-                                Tanpa Alamat</h2>
+                            <h2 class="card-title text-sm text-base-content/60 font-medium">Tanpa Alamat</h2>
                             <div class="flex items-center gap-2 mt-2">
                                 <span
                                     class="text-2xl font-bold text-warning">{{ $stats['without_address'] ?? 0 }}</span>
@@ -236,7 +234,7 @@
                                 </td>
                                 <td>
                                     <div class="avatar">
-                                        <div class=" w-10 h-10 bg-transparent">
+                                        <div class="rounded-lg w-10 h-10 bg-transparent">
                                             <img src="{{ $opd->logo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($opd->singkatan) . '&background=random' }}"
                                                 alt="{{ $opd->name }}">
                                         </div>
