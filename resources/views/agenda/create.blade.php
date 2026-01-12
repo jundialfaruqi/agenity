@@ -113,6 +113,26 @@
                     </div>
 
                     <div>
+                        <label class="label"><span class="label-text font-bold mb-2">Link Streaming
+                                YouTube</span></label>
+                        <input name="link_streaming_youtube" type="url" value="{{ old('link_streaming_youtube') }}"
+                            class="input input-bordered w-full" placeholder="https://youtube.com/...">
+                    </div>
+
+                    <div>
+                        <label class="label"><span class="label-text font-bold mb-2">Link Lainnya</span></label>
+                        <input name="link_lainnya" type="url" value="{{ old('link_lainnya') }}"
+                            class="input input-bordered w-full" placeholder="https://...">
+                    </div>
+
+                    <div>
+                        <label class="label"><span class="label-text font-bold mb-2">Keterangan Link
+                                Lainnya</span></label>
+                        <input name="ket_link_lainnya" type="text" value="{{ old('ket_link_lainnya') }}"
+                            class="input input-bordered w-full" placeholder="Contoh: Link Drive, Link Survey, dsb">
+                    </div>
+
+                    <div>
                         <label class="label"><span class="label-text font-bold mb-2">Status Publikasi</span></label>
                         <select name="status" class="select select-bordered w-full" required>
                             <option value="draft" @selected(old('status') === 'draft')>Draft</option>

@@ -32,47 +32,137 @@
                     <div class="font-medium text-sm">{{ $session->agenda->title }}</div>
                     <div class="text-xs opacity-70 italic mt-1">{{ $session->session_name }}</div>
 
-                    @if ($session->agenda->link_paparan || $session->agenda->link_zoom || $session->agenda->catatan)
+                    @if (
+                        $session->agenda->link_paparan ||
+                            $session->agenda->link_zoom ||
+                            $session->agenda->link_streaming_youtube ||
+                            $session->agenda->link_lainnya ||
+                            $session->agenda->catatan)
                         <div class="divider my-2 opacity-20"></div>
 
-                        @if ($session->agenda->link_paparan)
-                            <div class="mb-3">
-                                <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Link Paparan / Materi</div>
-                                <a href="{{ $session->agenda->link_paparan }}" target="_blank"
-                                    class="btn btn-xs btn-outline btn-primary normal-case">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                    </svg>
-                                    Buka Materi
-                                </a>
-                            </div>
-                        @endif
+                        <div class="space-y-4">
+                            @if ($session->agenda->link_paparan)
+                                <div class="flex flex-col">
+                                    <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Link Paparan / Materi
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <a href="{{ $session->agenda->link_paparan }}" target="_blank"
+                                            class="btn btn-xs btn-primary normal-case flex-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                            </svg>
+                                            Visit
+                                        </a>
+                                        <button onclick="copyToClipboard('{{ $session->agenda->link_paparan }}', this)"
+                                            class="btn btn-xs btn-outline btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
 
-                        @if ($session->agenda->link_zoom)
-                            <div class="mb-3">
-                                <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Link Zoom / Meeting</div>
-                                <a href="{{ $session->agenda->link_zoom }}" target="_blank"
-                                    class="btn btn-xs btn-outline btn-info normal-case">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                    </svg>
-                                    Gabung Meeting
-                                </a>
-                            </div>
-                        @endif
+                            @if ($session->agenda->link_zoom)
+                                <div class="flex flex-col">
+                                    <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Link Zoom / Meeting
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <a href="{{ $session->agenda->link_zoom }}" target="_blank"
+                                            class="btn btn-xs btn-info normal-case flex-1 text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                            </svg>
+                                            Visit
+                                        </a>
+                                        <button onclick="copyToClipboard('{{ $session->agenda->link_zoom }}', this)"
+                                            class="btn btn-xs btn-outline btn-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
 
-                        @if ($session->agenda->catatan)
-                            <div class="mb-1">
-                                <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Catatan Tambahan</div>
-                                <p class="text-xs italic opacity-70 bg-base-300 p-2 rounded border-l-2 border-primary">
-                                    {{ $session->agenda->catatan }}
-                                </p>
-                            </div>
-                        @endif
+                            @if ($session->agenda->link_streaming_youtube)
+                                <div class="flex flex-col">
+                                    <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Link Streaming YouTube
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <a href="{{ $session->agenda->link_streaming_youtube }}" target="_blank"
+                                            class="btn btn-xs btn-error normal-case flex-1 text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                            </svg>
+                                            Visit
+                                        </a>
+                                        <button
+                                            onclick="copyToClipboard('{{ $session->agenda->link_streaming_youtube }}', this)"
+                                            class="btn btn-xs btn-outline btn-error">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($session->agenda->link_lainnya)
+                                <div class="flex flex-col">
+                                    <div class="text-[10px] opacity-50 uppercase font-bold mb-1">
+                                        {{ $session->agenda->ket_link_lainnya ?? 'Link Lainnya' }}</div>
+                                    <div class="flex gap-2">
+                                        <a href="{{ $session->agenda->link_lainnya }}" target="_blank"
+                                            class="btn btn-xs btn-neutral normal-case flex-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                            </svg>
+                                            Visit
+                                        </a>
+                                        <button
+                                            onclick="copyToClipboard('{{ $session->agenda->link_lainnya }}', this)"
+                                            class="btn btn-xs btn-outline btn-neutral">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-3 h-3">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                            </svg>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($session->agenda->catatan)
+                                <div class="pt-2">
+                                    <div class="text-[10px] opacity-50 uppercase font-bold mb-1">Catatan Tambahan</div>
+                                    <p
+                                        class="text-xs italic opacity-70 bg-base-300 p-2 rounded border-l-2 border-primary">
+                                        {{ $session->agenda->catatan }}
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
                     @endif
                 </div>
 
@@ -86,6 +176,30 @@
             &copy; {{ date('Y') }} {{ $appSetting->app_name ?? config('app.name') }}
         </div>
     </div>
+    <script>
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-success">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    Copied
+                `;
+                btn.classList.add('btn-success', 'text-white');
+                btn.classList.remove('btn-outline');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('btn-success', 'text-white');
+                    btn.classList.add('btn-outline');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Gagal menyalin link');
+            });
+        }
+    </script>
 </body>
 
 </html>

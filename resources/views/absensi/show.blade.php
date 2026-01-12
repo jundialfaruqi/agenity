@@ -132,16 +132,26 @@
                             <label class="label"><span class="label-text font-bold mb-2">Instansi / Unit
                                     Kerja</span></label>
                             <div class="flex flex-col gap-2">
-                                <select name="master_opd_id" class="select select-bordered w-full" x-show="isOpd">
+                                <select name="master_opd_id" id="master_opd_id" class="select select-bordered w-full"
+                                    x-show="isOpd">
                                     <option value="">-- Pilih OPD --</option>
+                                    <option value="lainnya">Lainnya / Instansi Luar</option>
                                     @foreach ($opds as $opd)
-                                        <option value="{{ $opd->id }}" @selected(old('master_opd_id', Auth::user()->opd_master_id ?? '') == $opd->id)>
+                                        <option value="{{ $opd->id }}" data-name="{{ $opd->name }}"
+                                            @selected(old('master_opd_id', Auth::user()->opd_master_id ?? '') == $opd->id)>
                                             {{ $opd->name }}</option>
                                     @endforeach
+
                                 </select>
-                                <input name="asal_instansi" type="text"
-                                    placeholder="Atau tulis manual jika luar OPD" class="input input-bordered w-full"
+                                <input name="asal_instansi" id="asal_instansi" type="text"
+                                    placeholder="Ketik nama instansi anda disini..."
+                                    class="input input-bordered w-full"
                                     value="{{ old('asal_instansi', Auth::user()->opdMaster->name ?? '') }}">
+                                <label class="label">
+                                    <span class="label-text-alt text-error text-xs">Jika instansi tidak ada di daftar,
+                                        pilih
+                                        <strong>Lainnya</strong> dan ketik manual di kolom atas.</span>
+                                </label>
                             </div>
                             @error('asal_instansi')
                                 <span class="text-xs text-error mt-1">{{ $message }}</span>
@@ -217,6 +227,22 @@
                     alert('Silakan isi tanda tangan terlebih dahulu.');
                 } else {
                     document.getElementById('ttd-input').value = signaturePad.toDataURL();
+                }
+            });
+
+            // Auto-fill asal_instansi when OPD is selected
+            const opdSelect = document.getElementById('master_opd_id');
+            const asalInstansiInput = document.getElementById('asal_instansi');
+
+            opdSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const opdName = selectedOption.getAttribute('data-name');
+
+                if (this.value === 'lainnya' || this.value === '') {
+                    asalInstansiInput.value = '';
+                    asalInstansiInput.focus();
+                } else if (opdName) {
+                    asalInstansiInput.value = opdName;
                 }
             });
         });

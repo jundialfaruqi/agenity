@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $agenda->title }} - {{ config('app.name', 'Agenity') }}</title>
+    <title>{{ $agenda->title }} - {{ $appSetting->app_name ?? config('app.name') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,16 +23,20 @@
 <body class="bg-base-200 min-h-screen flex flex-col">
     <!-- Navbar -->
     <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50 px-4 lg:px-20">
-        <div class="flex-1">
+        <div class="flex-1 text-secondary">
             <a href="/" class="flex items-center gap-2">
-                <div class="p-1.5 bg-primary rounded-lg text-primary-content">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                @if ($appSetting && $appSetting->app_logo)
+                    <img src="{{ $appSetting->app_logo_url }}" class="w-10 h-10 object-contain" alt="Logo">
+                @else
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10">
+                        <path fill-rule="evenodd"
+                            d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
+                            clip-rule="evenodd" />
                     </svg>
-                </div>
-                <span class="text-xl font-bold tracking-tight text-base-content">Agenity</span>
+                @endif
+                <span class="text-xl font-bold tracking-tight">
+                    {{ $appSetting->app_name ?? config('app.name') }}
+                </span>
             </a>
         </div>
         <div class="flex-none">
@@ -52,10 +56,10 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="card bg-base-100 shadow-sm border border-base-200 overflow-hidden">
-                        <div class="h-4 bg-primary"></div>
+                        <div class="h-4 bg-secondary"></div>
                         <div class="card-body p-6 lg:p-10">
                             <div class="flex flex-wrap gap-2 mb-6">
-                                <div class="badge badge-primary font-bold uppercase text-[10px] p-3">
+                                <div class="badge badge-secondary font-bold uppercase text-[10px] p-3">
                                     {{ $agenda->visibility }}</div>
                                 <div class="badge badge-success font-bold uppercase text-[10px] p-3">
                                     {{ $agenda->status }}</div>
@@ -90,13 +94,73 @@
                             <div class="prose max-w-none text-base-content/80 leading-relaxed mb-8">
                                 <h3 class="text-xl font-bold text-base-content mb-3">Deskripsi Agenda</h3>
                                 {!! nl2br(e($agenda->catatan ?? 'Tidak ada deskripsi tambahan untuk agenda ini.')) !!}
+
+                                @if ($agenda->link_lainnya)
+                                    <div class="mt-6 p-4 bg-base-200 rounded-xl">
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div>
+                                                <div
+                                                    class="text-xs font-bold text-base-content/60 uppercase tracking-wider mb-1">
+                                                    {{ $agenda->ket_link_lainnya ?? 'Link Tambahan' }}
+                                                </div>
+                                                <div id="link-display-text" class="font-mono text-sm break-all hidden">
+                                                    {{ $agenda->link_lainnya }}
+                                                </div>
+                                                <div id="link-display-placeholder"
+                                                    class="font-mono text-sm italic text-base-content/40">
+                                                    ••••••••••••••••••••••••••••••••
+                                                </div>
+                                            </div>
+                                            <div class="join">
+                                                <button onclick="toggleLinkVisibility(this)"
+                                                    class="btn btn-sm join-item btn-ghost border-base-300"
+                                                    title="Tampilkan/Sembunyikan">
+                                                    <svg id="icon-show" xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                                        stroke="currentColor" class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                    </svg>
+                                                    <svg id="icon-hide" xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                                        stroke="currentColor" class="w-4 h-4 text-primary hidden">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                                    </svg>
+                                                </button>
+                                                <button onclick="copyToClipboard('{{ $agenda->link_lainnya }}', this)"
+                                                    class="btn btn-sm join-item btn-ghost border-base-300"
+                                                    title="Salin Link">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                    </svg>
+                                                </button>
+                                                <a href="{{ $agenda->link_lainnya }}" target="_blank"
+                                                    class="btn btn-sm join-item btn-ghost border-base-300"
+                                                    title="Kunjungi Link">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="divider"></div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="flex gap-4">
-                                    <div class="p-3 bg-primary/10 text-primary rounded-xl h-fit">
+                                    <div class="p-3 bg-secondary/10 text-secondary rounded-xl h-fit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -108,12 +172,12 @@
                                             class="text-xs text-base-content/50 font-bold uppercase tracking-wider mb-1">
                                             Tanggal</div>
                                         <div class="text-base font-bold text-base-content">
-                                            {{ \Carbon\Carbon::parse($agenda->date)->translatedFormat('l, d F Y') }}
+                                            {{ \Carbon\Carbon::parse($agenda->date)->locale('id')->translatedFormat('l, d F Y') }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
-                                    <div class="p-3 bg-primary/10 text-primary rounded-xl h-fit">
+                                    <div class="p-3 bg-secondary/10 text-secondary rounded-xl h-fit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -129,7 +193,7 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
-                                    <div class="p-3 bg-primary/10 text-primary rounded-xl h-fit">
+                                    <div class="p-3 bg-secondary/10 text-secondary rounded-xl h-fit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -147,7 +211,7 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
-                                    <div class="p-3 bg-primary/10 text-primary rounded-xl h-fit">
+                                    <div class="p-3 bg-secondary/10 text-secondary rounded-xl h-fit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -171,10 +235,11 @@
                 <div class="space-y-6">
                     @if ($agenda->sessions->count() > 0)
                         @php $session = $agenda->sessions->first(); @endphp
-                        <div class="card bg-base-100 shadow-xl border border-primary/20 overflow-hidden sticky top-24">
-                            <div class="bg-primary p-4 text-center">
-                                <h3 class="text-primary-content font-bold">Absensi Digital</h3>
-                                <p class="text-primary-content/70 text-xs mt-1">Scan untuk mengisi daftar hadir</p>
+                        <div
+                            class="card bg-base-100 shadow-xl border border-secondary/20 overflow-hidden sticky top-24">
+                            <div class="bg-secondary p-4 text-center">
+                                <h3 class="text-secondary-content font-bold">Absensi Digital</h3>
+                                <p class="text-secondary-content/70 text-xs mt-1">Scan untuk mengisi daftar hadir</p>
                             </div>
                             <div class="card-body items-center text-center p-8">
                                 <div class="bg-white p-4 rounded-2xl shadow-inner mb-6 border border-base-200">
@@ -190,7 +255,7 @@
                                         <input id="absensi_link" type="text" readonly
                                             value="{{ route('absensi.show', $session->token) }}"
                                             class="input input-bordered input-sm join-item grow text-xs focus:outline-none" />
-                                        <button onclick="copyLink()" class="btn btn-sm btn-primary join-item">
+                                        <button onclick="copyLink()" class="btn btn-sm btn-secondary join-item">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                 class="w-4 h-4">
@@ -205,7 +270,7 @@
                                 </div>
 
                                 <a href="{{ route('absensi.show', $session->token) }}"
-                                    class="btn btn-primary btn-block rounded-xl gap-2">
+                                    class="btn btn-secondary btn-block rounded-xl gap-2">
                                     Isi Absensi Sekarang
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -245,14 +310,21 @@
         class="footer p-10 bg-neutral text-neutral-content lg:px-20 mt-12 flex flex-col md:flex-row justify-between gap-10">
         <div class="max-w-xs">
             <div class="flex items-center gap-2 mb-4">
-                <div class="p-2 bg-primary rounded-lg text-primary-content">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                    </svg>
+                <div class="text-primary-content">
+                    @if ($appSetting && $appSetting->app_logo)
+                        <img src="{{ $appSetting->app_logo_url }}" class="w-6 h-6 object-contain" alt="Logo">
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="w-10 h-10">
+                            <path fill-rule="evenodd"
+                                d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    @endif
                 </div>
-                <span class="text-2xl font-bold tracking-tight">Agenity</span>
+                <span class="text-2xl font-bold tracking-tight">
+                    {{ $appSetting->app_name ?? config('app.name') }}
+                </span>
             </div>
             <p>Agenity Digital Agenda Management.<br />Solusi cerdas untuk pengelolaan kegiatan dan absensi.</p>
             <p class="text-xs opacity-50 mt-4">&copy; {{ date('Y') }} Agenity. All rights reserved.</p>
@@ -280,6 +352,41 @@
     </footer>
 
     <script>
+        function toggleLinkVisibility(btn) {
+            const linkText = document.getElementById('link-display-text');
+            const linkPlaceholder = document.getElementById('link-display-placeholder');
+            const iconShow = document.getElementById('icon-show');
+            const iconHide = document.getElementById('icon-hide');
+
+            if (linkText.classList.contains('hidden')) {
+                linkText.classList.remove('hidden');
+                linkPlaceholder.classList.add('hidden');
+                iconShow.classList.add('hidden');
+                iconHide.classList.remove('hidden');
+            } else {
+                linkText.classList.add('hidden');
+                linkPlaceholder.classList.remove('hidden');
+                iconShow.classList.remove('hidden');
+                iconHide.classList.add('hidden');
+            }
+        }
+
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-success">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                `;
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
         function copyLink() {
             const linkInput = document.getElementById('absensi_link');
             linkInput.select();

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('master_opd_id')->nullable()->constrained('opd_masters')->onDelete('set null');
             $table->string('asal_instansi');
             $table->string('jabatan_pekerjaan');
-            $table->text('ttd_path')->nullable(); // Base64 or path to image
+            $table->text('ttd_path'); // Base64 or path to image
             $table->dateTime('checkin_time');
             $table->string('ip_address')->nullable();
             $table->text('user_agent')->nullable();

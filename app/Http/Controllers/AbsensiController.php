@@ -62,7 +62,7 @@ class AbsensiController extends Controller
             'handphone' => 'required|string|max:20',
             'asal_daerah' => 'required|in:dalam_kota,luar_kota',
             'master_opd_id' => 'nullable|exists:opd_masters,id',
-            'asal_instansi' => 'nullable|string|max:255',
+            'asal_instansi' => 'required|string|max:255',
             'jabatan_pekerjaan' => 'required|string|max:255',
             'ttd' => 'required|string', // Base64 signature
         ]);

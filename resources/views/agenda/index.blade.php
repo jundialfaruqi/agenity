@@ -243,16 +243,33 @@
                                     </div>
                                 </td>
                                 <td>
-                                    @php
-                                        $statusClass = match ($agenda->status) {
-                                            'active' => 'badge-success',
-                                            'draft' => 'badge-warning',
-                                            'finished' => 'badge-neutral',
-                                            default => 'badge-ghost',
-                                        };
-                                    @endphp
-                                    <span
-                                        class="badge badge-sm {{ $statusClass }} uppercase font-bold text-[10px]">{{ $agenda->status }}</span>
+                                    <div class="flex flex-col gap-1">
+                                        <span
+                                            class="badge badge-sm {{ $agenda->status_badge_class }} uppercase font-bold text-[10px]">{{ $agenda->status }}</span>
+                                        <span
+                                            class="badge whitespace-nowrap badge-sm badge-neutral text-[10px] {{ $agenda->time_status['text_class'] }} italic leading-tight">
+                                            {{ $agenda->time_status['label'] }}
+                                        </span>
+                                        <span
+                                            class="badge badge-xs {{ $agenda->visibility_status['class'] }} uppercase font-bold text-[9px] py-2 px-2 gap-1">
+                                            @if ($agenda->visibility === 'public')
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    class="w-2.5 h-2.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                </svg>
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                    class="w-2.5 h-2.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                </svg>
+                                            @endif
+                                            {{ $agenda->visibility_status['label'] }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <div class="flex justify-center gap-2">
@@ -321,7 +338,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                         </svg>
-                                        <p>No agendas found.</p>
+                                        <p>Tidak Ada Agenda</p>
                                     </div>
                                 </td>
                             </tr>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Agenity') }} - Digital Agenda Management</title>
+    <title>{{ ($title ?? 'Welcome') . ' - ' . ($appSetting->app_name ?? config('app.name')) }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,29 +23,24 @@
 <body class="bg-base-200 min-h-screen flex flex-col">
     <!-- Navbar -->
     <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50 px-4 lg:px-20">
-        <div class="flex-1">
+        <div class="flex-1 text-secondary">
             <a href="/" class="flex items-center gap-2">
-                <div class="p-1.5 bg-primary rounded-lg text-primary-content">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                @if ($appSetting && $appSetting->app_logo)
+                    <img src="{{ $appSetting->app_logo_url }}" class="w-10 h-10 object-contain" alt="Logo">
+                @else
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10">
+                        <path fill-rule="evenodd"
+                            d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
+                            clip-rule="evenodd" />
                     </svg>
-                </div>
-                <span class="text-xl font-bold tracking-tight">Agenity</span>
+                @endif
+                <span class="text-xl font-bold tracking-tight">{{ $appSetting->app_name ?? config('app.name') }}</span>
             </a>
         </div>
         <div class="flex-none gap-2">
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm rounded-lg">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-ghost btn-sm rounded-lg">Log in</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn btn-primary btn-sm rounded-lg">Register</a>
-                    @endif
-                @endauth
-            @endif
+            @auth
+                <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm rounded-lg">Dashboard</a>
+            @endauth
         </div>
     </div>
 
@@ -61,67 +56,82 @@
                         sesi absensi, dan pelaporan secara real-time dan efisien.
                     </p>
                     <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#agendas" class="btn btn-primary btn-lg rounded-xl px-8">Lihat Agenda Aktif</a>
-                        <a href="{{ route('login') }}" class="btn btn-outline btn-lg rounded-xl px-8">Mulai Sekarang</a>
+                        <a href="#agendas" class="btn btn-secondary btn-lg rounded-xl px-8">Lihat Agenda Aktif</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Stats Section -->
-        <div class="bg-base-200 py-12">
+        <div class="bg-base-100 pb-16">
             <div class="container mx-auto px-4 lg:px-20">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="card bg-base-100 shadow-sm border border-base-300">
-                        <div class="card-body items-center text-center p-6">
-                            <div class="p-3 bg-primary/10 text-primary rounded-xl mb-3">
+                    <div
+                        class="card rounded-full bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
+                        <div class="card-body p-5 flex-row items-center gap-4 text-left">
+                            <div class="p-3 bg-primary/10 text-primary rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                 </svg>
                             </div>
-                            <div class="text-3xl font-bold">{{ $stats['total'] ?? 0 }}</div>
-                            <div class="text-sm text-base-content/60 font-medium">Total Agenda</div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold tracking-widest text-base-content/50">Total
+                                    Agenda</p>
+                                <p class="text-2xl font-black mt-0.5">{{ $stats['total'] ?? 0 }}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-base-100 shadow-sm border border-base-300">
-                        <div class="card-body items-center text-center p-6">
-                            <div class="p-3 bg-success/10 text-success rounded-xl mb-3">
+                    <div
+                        class="card rounded-full bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
+                        <div class="card-body p-5 flex-row items-center gap-4 text-left">
+                            <div class="p-3 bg-success/10 text-success rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
                             </div>
-                            <div class="text-3xl font-bold">{{ $stats['active'] ?? 0 }}</div>
-                            <div class="text-sm text-base-content/60 font-medium">Agenda Aktif</div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold tracking-widest text-base-content/50">Agenda
+                                    Aktif</p>
+                                <p class="text-2xl font-black mt-0.5">{{ $stats['active'] ?? 0 }}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-base-100 shadow-sm border border-base-300">
-                        <div class="card-body items-center text-center p-6">
-                            <div class="p-3 bg-info/10 text-info rounded-xl mb-3">
+                    <div
+                        class="card rounded-full bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
+                        <div class="card-body p-5 flex-row items-center gap-4 text-left">
+                            <div class="p-3 bg-info/10 text-info rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M10.125 2.25h3.75a.75.75 0 0 1 .75.75v1.125c0 .414.336.75.75.75h4.5a2.25 2.25 0 0 1 2.25 2.25v12.75a2.25 2.25 0 0 1-2.25 2.25H4.125a2.25 2.25 0 0 1-2.25-2.25V7.125a2.25 2.25 0 0 1 2.25-2.25h4.5c.414 0 .75-.336.75-.75V3a.75.75 0 0 1 .75-.75ZM9 10.125a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5H9Zm0 3.75a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5H9Z" />
                                 </svg>
                             </div>
-                            <div class="text-3xl font-bold">{{ $stats['finished'] ?? 0 }}</div>
-                            <div class="text-sm text-base-content/60 font-medium">Agenda Selesai</div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold tracking-widest text-base-content/50">Agenda
+                                    Selesai</p>
+                                <p class="text-2xl font-black mt-0.5">{{ $stats['finished'] ?? 0 }}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-base-100 shadow-sm border border-base-300">
-                        <div class="card-body items-center text-center p-6">
-                            <div class="p-3 bg-warning/10 text-warning rounded-xl mb-3">
+                    <div
+                        class="card rounded-full bg-base-100 shadow border border-base-200 hover:shadow-md transition-shadow">
+                        <div class="card-body p-5 flex-row items-center gap-4 text-left">
+                            <div class="p-3 bg-warning/10 text-warning rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>
                             </div>
-                            <div class="text-3xl font-bold">{{ $stats['draft'] ?? 0 }}</div>
-                            <div class="text-sm text-base-content/60 font-medium">Draft Agenda</div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold tracking-widest text-base-content/50">Draft
+                                    Agenda</p>
+                                <p class="text-2xl font-black mt-0.5">{{ $stats['draft'] ?? 0 }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -138,8 +148,8 @@
                             secara publik.</p>
                     </div>
                     <div class="hidden md:block">
-                        <span class="badge badge-lg badge-outline gap-2 p-4">
-                            <div class="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+                        <span class="badge badge-lg badge-secondary gap-2 p-4">
+                            <div class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
                             {{ $agendas->total() }} Agenda Ditemukan
                         </span>
                     </div>
@@ -182,7 +192,7 @@
                                     @endif
                                     <div class="absolute top-4 right-4 flex flex-col gap-2">
                                         <div
-                                            class="badge badge-primary font-bold shadow-sm uppercase text-[10px] p-2.5">
+                                            class="badge badge-secondary font-bold shadow-sm uppercase text-[10px] p-2.5">
                                             {{ $agenda->visibility }}</div>
                                         <div
                                             class="badge badge-success font-bold shadow-sm uppercase text-[10px] p-2.5">
@@ -199,24 +209,33 @@
                                             {{ $agenda->mode }}</div>
                                     </div>
                                     <h2
-                                        class="card-title text-xl mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-14">
+                                        class="card-title text-xl mb-2 group-hover:text-secondary transition-colors line-clamp-2 min-h-14">
                                         <a
                                             href="{{ route('agenda.public_detail', $agenda->id) }}">{{ $agenda->title }}</a>
                                     </h2>
                                     <div class="space-y-2 mb-6 grow">
-                                        <div class="flex items-center gap-3 text-sm text-base-content/60">
+                                        <div class="flex items-center gap-3 text-sm text-base-content/60 flex-wrap">
+
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                 class="w-4 h-4 text-primary">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                             </svg>
-                                            {{ \Carbon\Carbon::parse($agenda->date)->translatedFormat('d F Y') }}
+                                            {{ \Carbon\Carbon::parse($agenda->date)->locale('id')->translatedFormat('d F Y') }}
+
+
+                                            @if ($agenda->time_status['label'])
+                                                <span
+                                                    class="badge badge-xs {{ $agenda->time_status['class'] }} font-bold uppercase">
+                                                    {{ $agenda->time_status['label'] }}
+                                                </span>
+                                            @endif
                                         </div>
                                         <div class="flex items-center gap-3 text-sm text-base-content/60">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="w-4 h-4 text-primary">
+                                                class="w-4 h-4 text-error">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                             </svg>
@@ -225,7 +244,7 @@
                                         <div class="flex items-center gap-3 text-sm text-base-content/60">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="w-4 h-4 text-primary">
+                                                class="w-4 h-4 text-success">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -238,7 +257,7 @@
                                             class="flex items-center gap-3 text-sm font-semibold text-base-content/80 mt-2">
                                             <div class="avatar placeholder">
                                                 <div
-                                                    class="bg-primary text-primary-content text-center rounded-full w-6">
+                                                    class="bg-secondary text-secondary-content text-center rounded-full w-6">
                                                     <span
                                                         class="text-[10px]">{{ substr($agenda->opdMaster->singkatan, 0, 2) }}</span>
                                                 </div>
@@ -249,7 +268,7 @@
                                     <div
                                         class="card-actions justify-between items-center mt-auto pt-4 border-t border-base-200">
                                         <a href="{{ route('agenda.public_detail', $agenda->id) }}"
-                                            class="btn btn-primary btn-sm rounded-lg grow">Detail Agenda</a>
+                                            class="btn btn-secondary btn-sm rounded-lg grow">Detail Agenda</a>
                                         @if ($agenda->sessions->count() > 0)
                                             <button type="button"
                                                 class="btn btn-square btn-outline btn-sm rounded-lg"
@@ -285,14 +304,21 @@
         class="footer p-10 bg-neutral text-neutral-content lg:px-20 flex flex-col md:flex-row justify-between gap-10">
         <div class="max-w-xs">
             <div class="flex items-center gap-2 mb-4">
-                <div class="p-2 bg-primary rounded-lg text-primary-content">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                    </svg>
+                <div class="text-primary-content">
+                    @if ($appSetting && $appSetting->app_logo)
+                        <img src="{{ $appSetting->app_logo_url }}" class="w-6 h-6 object-contain" alt="Logo">
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="w-10 h-10">
+                            <path fill-rule="evenodd"
+                                d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    @endif
                 </div>
-                <span class="text-2xl font-bold tracking-tight">Agenity</span>
+                <span class="text-2xl font-bold tracking-tight">
+                    {{ $appSetting->app_name ?? config('app.name') }}
+                </span>
             </div>
             <p>Agenity Digital Agenda Management.<br />Solusi cerdas untuk pengelolaan kegiatan dan absensi.</p>
             <p class="text-xs opacity-50 mt-4">&copy; {{ date('Y') }} Agenity. All rights reserved.</p>

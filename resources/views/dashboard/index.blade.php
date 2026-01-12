@@ -125,7 +125,7 @@
         </div>
     </div>
 
-    <!-- Recent Orders & Quick Chat -->
+    <!-- Upcoming Agendas -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <!-- Upcoming Agendas -->
         <div class="card bg-base-100 shadow-sm col-span-1 lg:col-span-2">
@@ -173,7 +173,8 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <div class="font-bold text-sm">{{ $agenda->title }}</div>
+                                                <div class="font-bold">
+                                                    {{ \Illuminate\Support\Str::words($agenda->title, 4) }}</div>
                                                 <div class="text-[10px] opacity-50">
                                                     {{ $agenda->user->name ?? 'System' }}</div>
                                             </div>
@@ -193,44 +194,30 @@
                                             class="text-xs truncate max-w-37.5 inline-block">{{ $agenda->location }}</span>
                                     </td>
                                     <td>
-                                        @php
-                                            $now = \Carbon\Carbon::now('Asia/Jakarta');
-                                            $agendaDateTime = \Carbon\Carbon::parse(
-                                                $agenda->date . ' ' . $agenda->end_time,
-                                                'Asia/Jakarta',
-                                            );
-                                            $diffInDays = $now
-                                                ->startOfDay()
-                                                ->diffInDays(
-                                                    \Carbon\Carbon::parse($agenda->date, 'Asia/Jakarta')->startOfDay(),
-                                                    false,
-                                                );
-
-                                            $statusLabel = '';
-                                            $statusClass = '';
-
-                                            if ($now->greaterThan($agendaDateTime)) {
-                                                $statusLabel = 'Sudah Lewat';
-                                                $statusClass = 'badge-ghost opacity-70';
-                                            } elseif ($diffInDays == 0) {
-                                                $statusLabel = 'Hari Ini';
-                                                $statusClass = 'badge-warning';
-                                            } elseif ($diffInDays == 1) {
-                                                $statusLabel = 'Besok';
-                                                $statusClass = 'badge-info';
-                                            } elseif ($diffInDays > 0) {
-                                                $statusLabel = $diffInDays . ' Hari Lagi';
-                                                $statusClass = 'badge-primary';
-                                            } else {
-                                                $statusLabel = $agenda->status;
-                                                $statusClass = 'badge-success';
-                                            }
-                                        @endphp
                                         <div class="flex flex-col gap-1">
                                             <span
-                                                class="badge badge-success badge-xs py-2 px-2 uppercase font-bold text-[9px]">{{ $agenda->status }}</span>
+                                                class="badge {{ $agenda->status_badge_class }} badge-xs py-2 px-2 uppercase font-bold text-[9px]">{{ $agenda->status }}</span>
                                             <span
-                                                class="badge {{ $statusClass }} badge-xs py-2 px-2 font-medium text-[9px] whitespace-nowrap">{{ $statusLabel }}</span>
+                                                class="badge {{ $agenda->time_status['class'] }} badge-xs py-2 px-2 font-medium text-[9px] whitespace-nowrap">{{ $agenda->time_status['label'] }}</span>
+                                            <span
+                                                class="badge {{ $agenda->visibility_status['class'] }} badge-xs py-2 px-2 uppercase font-bold text-[9px] gap-1">
+                                                @if ($agenda->visibility === 'public')
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                        class="w-2.5 h-2.5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                    </svg>
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                        class="w-2.5 h-2.5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                    </svg>
+                                                @endif
+                                                {{ $agenda->visibility_status['label'] }}
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>
@@ -291,7 +278,7 @@
                     </div>
                 </div>
                 <!-- Input -->
-                <div class="p-4 border-t border-base-200">
+                <div class="p-4 border-t mt-auto border-base-200">
                     <div class="join w-full">
                         <input class="input input-bordered input-sm join-item w-full" placeholder="Tulis pesan..." />
                         <button class="btn btn-primary btn-sm join-item">Kirim</button>
