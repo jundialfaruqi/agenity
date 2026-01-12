@@ -19,7 +19,7 @@ Route::get('/dashboard', function () {
 
 Route::get('/profile', Profile::class)->name('profile')->middleware(RequireLogin::class);
 
-Route::middleware([RequireLogin::class, 'role:super-admin|admin'])->group(function () {
+Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users.index')->middleware([RequireLogin::class, 'permission:view-user']);
     Route::get('/users/suggest', [UsersController::class, 'suggest'])->name('users.suggest')->middleware([RequireLogin::class, 'permission:view-user']);
     Route::get('/users/create', [UsersController::class, 'create'])->name('users.create')->middleware([RequireLogin::class, 'permission:add-user']);
@@ -36,6 +36,7 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin'])->group(functi
     Route::get('/master-opd/{opd}/edit', [OpdMasterController::class, 'edit'])->name('opd.edit')->middleware([RequireLogin::class, 'permission:edit-master-opd']);
     Route::put('/master-opd/{opd}', [OpdMasterController::class, 'update'])->name('opd.update')->middleware([RequireLogin::class, 'permission:edit-master-opd']);
     Route::delete('/master-opd/{opd}', [OpdMasterController::class, 'destroy'])->name('opd.destroy')->middleware([RequireLogin::class, 'permission:delete-master-opd']);
+
     // Agenda Master
     Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index')->middleware([RequireLogin::class, 'permission:view-agenda']);
     Route::get('/agenda/suggest', [AgendaController::class, 'suggest'])->name('agenda.suggest')->middleware([RequireLogin::class, 'permission:view-agenda']);

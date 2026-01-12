@@ -21,13 +21,15 @@ Aplikasi ini ditenagai oleh kombinasi _tech stack_ mutakhir:
 
 ## ✨ Fitur Utama
 
--   **Manajemen User & Role:** Kontrol penuh menggunakan Spatie Laravel Permission dengan UI yang intuitif.
--   **Manajemen OPD (Organisasi Perangkat Daerah):** Pengelolaan data master OPD yang terintegrasi dengan user.
--   **Profil Dinamis:** Halaman profil modern dengan fitur upload foto profil dan banner secara real-time.
--   **Pengaturan Aplikasi (App Settings):** Kustomisasi nama aplikasi, logo, serta judul dan deskripsi halaman login langsung dari dashboard (Tab Settings di Profil).
--   **UI Modern & Responsif:** Dibangun dengan Tailwind CSS dan DaisyUI untuk pengalaman pengguna yang maksimal di berbagai perangkat.
--   **Sistem Notifikasi Toast:** Feedback instan yang elegan untuk setiap aksi pengguna.
--   **Automated Maintenance:** Pembersihan otomatis file storage lama (avatars, banners, logos, opd_logos) dan pengecekan storage link yang terintegrasi dalam sistem seeder.
+-   **Manajemen User & Role (RBAC):** Kontrol akses mendalam menggunakan Spatie Laravel Permission dengan proteksi otomatis berdasarkan hierarki organisasi (Admin-OPD vs Super Admin).
+-   **Keamanan Data Berbasis OPD:** Filter cerdas yang membatasi Role `admin-opd` agar hanya dapat melihat, mencari, dan mengelola data agenda milik sendiri atau data dalam satu instansi (OPD) yang sama.
+-   **Manajemen Agenda & Absensi:** Sistem pengelolaan agenda yang terintegrasi dengan fitur absensi publik, lengkap dengan ekspor data dan validasi kepemilikan.
+-   **Optimasi UX & Anti-Duplikasi:** Penanganan submit absensi menggunakan pola _Post-Redirect-Get_ (PRG) untuk mencegah duplikasi data saat reload halaman.
+-   **UI Modern & Konsisten:** Antarmuka responsif menggunakan Tailwind CSS & DaisyUI dengan komponen modal konfirmasi yang seragam untuk setiap aksi kritikal.
+-   **Autentikasi Pintar:** Sistem deteksi sesi aktif yang secara otomatis mengalihkan user yang sudah login dari halaman login ke dashboard.
+-   **Manajemen OPD (Organisasi Perangkat Daerah):** Pengelolaan data master OPD yang terintegrasi erat dengan profil user dan filter data aplikasi.
+-   **Profil Dinamis & Pengaturan:** Kustomisasi profil (avatar/banner) dan pengaturan branding aplikasi (nama, logo, tema login) secara real-time dari dashboard.
+-   **Automated Maintenance:** Sistem pembersihan otomatis file storage lama dan verifikasi infrastruktur yang terintegrasi dalam proses seeding.
 
 ---
 
@@ -100,7 +102,7 @@ Step 5: Creating Users & Assigning Roles...
 | Name         | Email               | Password | Role         | Status |
 +--------------+---------------------+----------+--------------+--------+
 | Super Admin  | superadmin@mail.com | password | super-admin  | active |
-| Admin        | admin@mail.com      | password | admin        | active |
+| Admin OPD    | adminopd@mail.com   | password | admin-opd    | active |
 | Regular User | user@mail.com       | password | user         | active |
 | User Example | user@example.com    | string   | user-example | active |
 +--------------+---------------------+----------+--------------+--------+

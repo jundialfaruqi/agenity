@@ -8,12 +8,22 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class AgendaService
 {
     public function listAgendas(?string $search = null, ?string $status = null, int $perPage = 10)
     {
         $query = Agenda::query()->with(['opdMaster', 'user', 'sessions']);
+
+        // Filter by user if role is admin-opd
+        if (Auth::check() && Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            $query->where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                    ->orWhere('master_opd_id', $user->opd_master_id);
+            });
+        }
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -36,12 +46,25 @@ class AgendaService
 
     public function getStats(): array
     {
-        return [
-            'total' => Agenda::query()->count(),
-            'active' => Agenda::query()->where('status', 'active')->count(),
-            'draft' => Agenda::query()->where('status', 'draft')->count(),
-            'finished' => Agenda::query()->where('status', 'finished')->count(),
+        $query = Agenda::query();
+
+        // Filter by user if role is admin-opd
+        if (Auth::check() && Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            $query->where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                    ->orWhere('master_opd_id', $user->opd_master_id);
+            });
+        }
+
+        $stats = [
+            'total' => (clone $query)->count(),
+            'active' => (clone $query)->where('status', 'active')->count(),
+            'draft' => (clone $query)->where('status', 'draft')->count(),
+            'finished' => (clone $query)->where('status', 'finished')->count(),
         ];
+
+        return $stats;
     }
 
     public function createAgenda(array $data): Agenda
@@ -107,17 +130,26 @@ class AgendaService
 
     public function suggest(string $q): Collection
     {
-        return Agenda::query()
-            ->with(['opdMaster'])
-            ->where(function ($query) use ($q) {
-                $query->where('title', 'like', '%' . $q . '%')
-                    ->orWhere('jenis_agenda', 'like', '%' . $q . '%')
-                    ->orWhere('location', 'like', '%' . $q . '%')
-                    ->orWhereHas('opdMaster', function ($oq) use ($q) {
-                        $oq->where('name', 'like', '%' . $q . '%')
-                            ->orWhere('singkatan', 'like', '%' . $q . '%');
-                    });
-            })
+        $query = Agenda::query()->with(['opdMaster']);
+
+        // Filter by user if role is admin-opd
+        if (Auth::check() && Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            $query->where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                    ->orWhere('master_opd_id', $user->opd_master_id);
+            });
+        }
+
+        return $query->where(function ($query) use ($q) {
+            $query->where('title', 'like', '%' . $q . '%')
+                ->orWhere('jenis_agenda', 'like', '%' . $q . '%')
+                ->orWhere('location', 'like', '%' . $q . '%')
+                ->orWhereHas('opdMaster', function ($oq) use ($q) {
+                    $oq->where('name', 'like', '%' . $q . '%')
+                        ->orWhere('singkatan', 'like', '%' . $q . '%');
+                });
+        })
             ->limit(5)
             ->get()
             ->map(function ($a) {

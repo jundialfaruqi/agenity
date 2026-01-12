@@ -122,8 +122,8 @@ class DatabaseSeeder extends Seeder
             'guard_name' => 'web',
             'color' => '#ff0000'
         ]);
-        $adminRole = Role::updateOrCreate([
-            'name' => 'admin',
+        $adminOpdRole = Role::updateOrCreate([
+            'name' => 'admin-opd',
             'guard_name' => 'web',
             'color' => '#007bff'
         ]);
@@ -150,6 +150,11 @@ class DatabaseSeeder extends Seeder
         $examplePermissions = Permission::where('group', 'example')->get();
         $userExampleRole->syncPermissions($examplePermissions);
         $this->command->info('✔ Example permissions synced to User Example Role.');
+
+        // Sync agenda permissions to Admin OPD Role
+        $agendaPermissions = Permission::where('group', 'agenda')->get();
+        $adminOpdRole->syncPermissions($agendaPermissions);
+        $this->command->info('✔ Agenda permissions synced to Admin OPD Role.');
 
         // 4. Create OPD Masters
         $this->command->newLine();
@@ -199,15 +204,20 @@ class DatabaseSeeder extends Seeder
                 'role_obj' => $superAdminRole
             ],
             [
-                'email' => 'admin@mail.com',
-                'name' => 'Admin',
+                'email' => 'adminopd@mail.com',
+                'name' => 'Admin OPD',
                 'password' => 'password',
                 'status' => 'active',
                 'phone' => '+6281234567890',
                 'address' => 'Jl. Raya No. 123, Jakarta',
                 'email_verified_at' => now(),
-                'role' => 'admin',
-                'role_obj' => $adminRole
+                'role' => 'admin-opd',
+                'role_obj' => $adminOpdRole,
+                'opd_master_id' => $opdMasters['DISKOMINFO']->id ?? null,
+                'custom_files' => [
+                    'photo' => 'public/assets/images/avatars/avatar.png',
+                    'banner' => 'public/assets/images/banners/banner.jpg',
+                ]
             ],
             [
                 'email' => 'user@mail.com',

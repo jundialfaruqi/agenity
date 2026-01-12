@@ -64,12 +64,28 @@ class AgendaController extends Controller
 
     public function edit(Agenda $agenda)
     {
+        // Authorization for admin-opd
+        if (Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            if ($agenda->user_id !== $user->id && $agenda->master_opd_id !== $user->opd_master_id) {
+                abort(403, 'Anda tidak memiliki akses ke agenda ini.');
+            }
+        }
+
         $opds = OpdMaster::orderBy('name')->get();
         return view('agenda.edit', compact('agenda', 'opds'));
     }
 
     public function update(Request $request, AgendaService $service, Agenda $agenda): RedirectResponse
     {
+        // Authorization for admin-opd
+        if (Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            if ($agenda->user_id !== $user->id && $agenda->master_opd_id !== $user->opd_master_id) {
+                abort(403, 'Anda tidak memiliki akses ke agenda ini.');
+            }
+        }
+
         $validated = $request->validate([
             'master_opd_id' => 'required|exists:opd_masters,id',
             'title' => 'required|string|max:255',
@@ -89,6 +105,8 @@ class AgendaController extends Controller
             'status' => 'required|in:draft,active,finished',
         ]);
 
+        $validated['user_id'] = Auth::id();
+
         try {
             $service->updateAgenda($agenda, $validated);
             return redirect()->route('agenda.index')->with('success', 'Agenda berhasil diperbarui');
@@ -99,6 +117,14 @@ class AgendaController extends Controller
 
     public function destroy(Agenda $agenda): RedirectResponse
     {
+        // Authorization for admin-opd
+        if (Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            if ($agenda->user_id !== $user->id && $agenda->master_opd_id !== $user->opd_master_id) {
+                abort(403, 'Anda tidak memiliki akses ke agenda ini.');
+            }
+        }
+
         try {
             $agenda->delete();
             return redirect()->route('agenda.index')->with('success', 'Agenda berhasil dihapus');
@@ -109,6 +135,14 @@ class AgendaController extends Controller
 
     public function export(Agenda $agenda)
     {
+        // Authorization for admin-opd
+        if (Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            if ($agenda->user_id !== $user->id && $agenda->master_opd_id !== $user->opd_master_id) {
+                abort(403, 'Anda tidak memiliki akses ke agenda ini.');
+            }
+        }
+
         $agenda->load(['sessions.absensis.opdMaster', 'opdMaster', 'user']);
 
         $pdf = Pdf::loadView('agenda.report-pdf', compact('agenda'))
@@ -119,6 +153,14 @@ class AgendaController extends Controller
 
     public function showAbsensi(Agenda $agenda)
     {
+        // Authorization for admin-opd
+        if (Auth::user()->hasRole('admin-opd')) {
+            $user = Auth::user();
+            if ($agenda->user_id !== $user->id && $agenda->master_opd_id !== $user->opd_master_id) {
+                abort(403, 'Anda tidak memiliki akses ke agenda ini.');
+            }
+        }
+
         $agenda->load(['sessions.absensis.opdMaster', 'opdMaster']);
         return view('agenda.absensi', compact('agenda'));
     }

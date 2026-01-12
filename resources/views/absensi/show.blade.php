@@ -184,7 +184,8 @@
         </div>
 
         <div class="mt-8 text-center text-sm opacity-50">
-            &copy; {{ date('Y') }} {{ $appSetting->app_name ?? config('app.name') }} - Digital Attendance System
+            &copy; {{ date('Y') }} {{ $appSetting->app_name ?? config('app.name') }} - Digital Agenda & Attendance
+            Identity System
         </div>
     </div>
 

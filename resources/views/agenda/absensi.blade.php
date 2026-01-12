@@ -17,13 +17,14 @@
             <div class="flex gap-2">
                 <a href="{{ route('agenda.export', $agenda->id) }}" class="btn btn-primary gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-5 h-5">
+                        stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.72 13.821 12 19.101l5.28-5.28m-5.28 5.28V3m3.375 1.5h1.125a2.25 2.25 0 0 1 2.25 2.25v12a2.25 2.25 0 0 1-2.25 2.25H12" />
+                            d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
+
                     Download PDF
                 </a>
-                <a href="{{ route('agenda.index') }}" class="btn btn-ghost">Kembali</a>
+                <a href="{{ route('agenda.index') }}" class="btn btn-base-300">Kembali</a>
             </div>
         </div>
 
