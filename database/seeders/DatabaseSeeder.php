@@ -91,6 +91,14 @@ class DatabaseSeeder extends Seeder
                 'edit-master-opd',
                 'delete-master-opd',
             ],
+            'agenda' => [
+                'view-agenda',
+                'add-agenda',
+                'edit-agenda',
+                'delete-agenda',
+                'view-absensi',
+                'export-absensi',
+            ],
         ];
 
         foreach ($permissions as $group => $permissionList) {

@@ -55,6 +55,7 @@
     @livewireScripts
     <script src="{{ asset('js/global-loading.js') }}"></script>
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>
