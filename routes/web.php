@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UsersController;
@@ -13,9 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingPageController::class, 'index'])->name('welcome');
 Route::get('/agenda-detail/{agenda}', [LandingPageController::class, 'showAgenda'])->name('agenda.public_detail');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard.index')->middleware(RequireLogin::class);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware(RequireLogin::class);
 
 Route::get('/profile', Profile::class)->name('profile')->middleware(RequireLogin::class);
 
