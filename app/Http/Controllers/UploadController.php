@@ -14,11 +14,11 @@ class UploadController extends Controller
         if ($fileKey) {
             // Validasi file
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-                $fileKey => 'image|mimes:jpeg,png,jpg,gif|max:500', // Max 500KB
+                $fileKey => 'image|mimes:jpeg,png,jpg,gif,webp|max:500', // Max 500KB
             ], [
                 "$fileKey.max" => 'Ukuran gambar terlalu besar! Maksimal adalah 500KB.',
                 "$fileKey.image" => 'File yang diunggah harus berupa gambar.',
-                "$fileKey.mimes" => 'Format gambar harus jpeg, png, jpg, atau gif.',
+                "$fileKey.mimes" => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
             ]);
 
             if ($validator->fails()) {

@@ -46,4 +46,14 @@ class Agenda extends Model
     {
         return $this->hasMany(AgendaSession::class);
     }
+
+    public function getFirstImageAttribute()
+    {
+        if (empty($this->content)) {
+            return null;
+        }
+
+        preg_match('/<img.+?src=[\'"]([^\'"]+)[\'"].*?>/i', $this->content, $matches);
+        return $matches[1] ?? null;
+    }
 }

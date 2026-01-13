@@ -188,22 +188,35 @@
                                 class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group overflow-hidden flex flex-col h-full">
                                 <figure
                                     class="relative h-48 bg-primary/5 flex items-center justify-center overflow-hidden">
-                                    @if ($agenda->opdMaster->logo_url)
-                                        <img src="{{ $agenda->opdMaster->logo_url }}"
-                                            alt="{{ $agenda->opdMaster->name }}"
-                                            class="w-32 h-32 object-contain group-hover:scale-110 transition-transform duration-500 opacity-80" />
-                                    @else
-                                        <div
-                                            class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="w-12 h-12">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                                            </svg>
+                                    @if ($agenda->first_image)
+                                        <div class="absolute inset-0 z-0">
+                                            <img src="{{ $agenda->first_image }}" alt="Background"
+                                                class="w-full h-full object-cover opacity-30 group-hover:scale-110 transition-transform duration-500" />
+                                            <div
+                                                class="absolute inset-0 bg-linear-to-t from-base-100/50 to-transparent">
+                                            </div>
                                         </div>
                                     @endif
-                                    <div class="absolute top-4 right-4 flex flex-col gap-2">
+
+                                    <div class="relative z-10 flex items-center justify-center w-full h-full">
+                                        @if ($agenda->opdMaster->logo_url)
+                                            <img src="{{ $agenda->opdMaster->logo_url }}"
+                                                alt="{{ $agenda->opdMaster->name }}"
+                                                class="w-28 h-28 object-contain group-hover:scale-110 transition-transform duration-500 {{ $agenda->first_image ? 'drop-shadow-lg' : 'opacity-80' }}" />
+                                        @else
+                                            <div
+                                                class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 {{ $agenda->first_image ? 'bg-white/80 backdrop-blur-sm shadow-lg' : '' }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-10 h-10">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="absolute top-4 right-4 flex flex-col gap-2 z-20">
                                         <div
                                             class="badge badge-secondary font-bold shadow-sm uppercase text-[10px] p-2.5">
                                             {{ $agenda->visibility }}</div>
