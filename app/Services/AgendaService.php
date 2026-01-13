@@ -38,7 +38,12 @@ class AgendaService
         }
 
         if ($status) {
-            $query->where('status', $status);
+            if ($status === 'past_active') {
+                $query->where('status', 'active')
+                    ->where('date', '<', \Carbon\Carbon::now()->toDateString());
+            } else {
+                $query->where('status', $status);
+            }
         }
 
         return $query->orderBy('date', 'desc')->orderBy('start_time', 'desc')->paginate($perPage);
@@ -62,6 +67,9 @@ class AgendaService
             'active' => (clone $query)->where('status', 'active')->count(),
             'draft' => (clone $query)->where('status', 'draft')->count(),
             'finished' => (clone $query)->where('status', 'finished')->count(),
+            'past_active' => (clone $query)->where('status', 'active')
+                ->where('date', '<', \Carbon\Carbon::now()->toDateString())
+                ->count(),
         ];
 
         return $stats;

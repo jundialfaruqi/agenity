@@ -20,9 +20,11 @@
     </style>
 </head>
 
-<body class="bg-base-200 min-h-screen flex flex-col">
+<body x-data="{ scrolled: false }" x-on:scroll.window="scrolled = (window.scrollY > 10)"
+    class="bg-base-200 min-h-screen flex flex-col">
     <!-- Navbar -->
-    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50 px-4 lg:px-20">
+    <div class="navbar sticky top-0 z-50 px-4 lg:px-20 transition-all duration-300 bg-base-100"
+        :class="{ 'bg-opacity-80 backdrop-blur-md shadow-sm': scrolled, 'bg-opacity-100': !scrolled }">
         <div class="flex-1 text-secondary">
             <a href="/" class="flex items-center gap-2">
                 @if ($appSetting && $appSetting->app_logo)
@@ -95,6 +97,94 @@
                                 <h3 class="text-xl font-bold text-base-content mb-3">Deskripsi Agenda</h3>
                                 {!! nl2br(e($agenda->catatan ?? 'Tidak ada deskripsi tambahan untuk agenda ini.')) !!}
 
+                                @if ($agenda->wifi_name || $agenda->password_wifi)
+                                    <div class="mt-8 p-6 bg-primary/5 border border-primary/10 rounded-2xl">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <div class="text-primary rounded-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-5 h-5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />
+                                                </svg>
+                                            </div>
+                                            <h4 class="font-bold text-base-content">Informasi Akses WiFi</h4>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            @if ($agenda->wifi_name)
+                                                <div class="bg-base-100 p-3 rounded-xl border border-base-200">
+                                                    <div
+                                                        class="text-[10px] uppercase font-bold text-base-content tracking-widest mb-1">
+                                                        SSID / Nama WiFi</div>
+                                                    <div class="flex items-center justify-between gap-2">
+                                                        <span
+                                                            class="font-mono font-bold text-primary text-[20px]">{{ $agenda->wifi_name }}</span>
+                                                        <button
+                                                            onclick="copyToClipboard('{{ $agenda->wifi_name }}', this)"
+                                                            class="btn btn-ghost btn-xs">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 24 24" stroke-width="1.5"
+                                                                stroke="currentColor" class="w-3 h-3">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @if ($agenda->password_wifi)
+                                                <div class="bg-base-100 p-3 rounded-xl border border-base-200">
+                                                    <div
+                                                        class="text-[10px] uppercase font-bold text-base-content tracking-widest mb-1">
+                                                        Password</div>
+                                                    <div class="flex items-center justify-between gap-2">
+                                                        <span class="font-mono font-bold text-secondary text-[20px]"
+                                                            id="wifi-pass-text"
+                                                            style="display: none;">{{ $agenda->password_wifi }}</span>
+                                                        <span class="font-mono font-bold text-secondary text-[20px]"
+                                                            id="wifi-pass-placeholder">••••••••</span>
+                                                        <div class="flex gap-1">
+                                                            <button onclick="toggleWifiPass(this)"
+                                                                class="btn btn-ghost btn-xs">
+                                                                <svg id="pw-icon-show"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-3 h-3">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                                </svg>
+                                                                <svg id="pw-icon-hide"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-3 h-3 hidden">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+                                                                </svg>
+                                                            </button>
+                                                            <button
+                                                                onclick="copyToClipboard('{{ $agenda->password_wifi }}', this)"
+                                                                class="btn btn-ghost btn-xs">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-3 h-3">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+
                                 @if ($agenda->link_lainnya)
                                     <div class="mt-6 p-4 bg-base-200 rounded-xl">
                                         <div class="flex items-center justify-between gap-4">
@@ -103,7 +193,8 @@
                                                     class="text-xs font-bold text-base-content/60 uppercase tracking-wider mb-1">
                                                     {{ $agenda->ket_link_lainnya ?? 'Link Tambahan' }}
                                                 </div>
-                                                <div id="link-display-text" class="font-mono text-sm break-all hidden">
+                                                <div id="link-display-text"
+                                                    class="font-mono text-sm break-all hidden">
                                                     {{ $agenda->link_lainnya }}
                                                 </div>
                                                 <div id="link-display-placeholder"
@@ -352,6 +443,25 @@
     </footer>
 
     <script>
+        function toggleWifiPass(btn) {
+            const passText = document.getElementById('wifi-pass-text');
+            const passPlaceholder = document.getElementById('wifi-pass-placeholder');
+            const iconShow = document.getElementById('pw-icon-show');
+            const iconHide = document.getElementById('pw-icon-hide');
+
+            if (passText.style.display === 'none') {
+                passText.style.display = 'inline';
+                passPlaceholder.style.display = 'none';
+                iconShow.classList.add('hidden');
+                iconHide.classList.remove('hidden');
+            } else {
+                passText.style.display = 'none';
+                passPlaceholder.style.display = 'inline';
+                iconShow.classList.remove('hidden');
+                iconHide.classList.add('hidden');
+            }
+        }
+
         function toggleLinkVisibility(btn) {
             const linkText = document.getElementById('link-display-text');
             const linkPlaceholder = document.getElementById('link-display-placeholder');

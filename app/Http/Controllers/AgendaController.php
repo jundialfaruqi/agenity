@@ -116,6 +116,8 @@ class AgendaController extends Controller
             'link_streaming_youtube' => 'nullable|url',
             'link_lainnya' => 'nullable|url',
             'ket_link_lainnya' => 'nullable|string|max:255',
+            'wifi_name' => 'nullable|string|max:255',
+            'password_wifi' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
             'status' => 'required|in:draft,active,finished',
         ]);
@@ -169,6 +171,8 @@ class AgendaController extends Controller
             'link_streaming_youtube' => 'nullable|url',
             'link_lainnya' => 'nullable|url',
             'ket_link_lainnya' => 'nullable|string|max:255',
+            'wifi_name' => 'nullable|string|max:255',
+            'password_wifi' => 'nullable|string|max:255',
             'catatan' => 'nullable|string',
             'status' => 'required|in:draft,active,finished',
         ]);

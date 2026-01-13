@@ -25,6 +25,8 @@ class Agenda extends Model
         'link_streaming_youtube',
         'link_lainnya',
         'ket_link_lainnya',
+        'wifi_name',
+        'password_wifi',
         'catatan',
         'status',
     ];

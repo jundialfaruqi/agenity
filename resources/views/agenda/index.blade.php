@@ -28,6 +28,10 @@
                         <div class="text-xs text-white opacity-80">Total Agenda</div>
                     </div>
                     <div class="text-center md:pl-6 md:ml-6 md:border-l md:border-dotted md:border-white/40">
+                        <div class="text-2xl text-white font-bold">{{ $stats['past_active'] ?? 0 }}</div>
+                        <div class="text-xs text-white opacity-80">Past Active</div>
+                    </div>
+                    <div class="text-center md:pl-6 md:ml-6 md:border-l md:border-dotted md:border-white/40">
                         <div class="text-2xl text-white font-bold">{{ $stats['active'] ?? 0 }}</div>
                         <div class="text-xs text-white opacity-80">Aktif</div>
                     </div>
@@ -123,6 +127,45 @@
     </div>
 
     <!-- Actions Toolbar -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ route('agenda.index') }}"
+                class="btn btn-sm {{ !request()->filled('status') && !request()->filled('q') ? 'btn-secondary' : 'btn-ghost bg-base-100' }}">
+                Semua
+                <div class="badge badge-sm">{{ $stats['total'] ?? 0 }}</div>
+            </a>
+            <a href="{{ route('agenda.index', array_merge(request()->query(), ['status' => 'past_active'])) }}"
+                class="btn btn-sm {{ request('status') == 'past_active' ? 'btn-error' : 'btn-ghost bg-base-100 text-error' }}">
+                Past Active
+                <div class="badge badge-sm badge-error text-white">{{ $stats['past_active'] ?? 0 }}</div>
+            </a>
+            <a href="{{ route('agenda.index', array_merge(request()->query(), ['status' => 'active'])) }}"
+                class="btn btn-sm {{ request('status') == 'active' ? 'btn-success' : 'btn-ghost bg-base-100 text-success' }}">
+                Active
+                <div class="badge badge-sm badge-success text-white">{{ $stats['active'] ?? 0 }}</div>
+            </a>
+            <a href="{{ route('agenda.index', array_merge(request()->query(), ['status' => 'draft'])) }}"
+                class="btn btn-sm {{ request('status') == 'draft' ? 'btn-warning' : 'btn-ghost bg-base-100 text-warning' }}">
+                Draft
+                <div class="badge badge-sm badge-warning text-white">{{ $stats['draft'] ?? 0 }}</div>
+            </a>
+            <a href="{{ route('agenda.index', array_merge(request()->query(), ['status' => 'finished'])) }}"
+                class="btn btn-sm {{ request('status') == 'finished' ? 'btn-neutral' : 'btn-ghost bg-base-100' }}">
+                Finished
+                <div class="badge badge-sm">{{ $stats['finished'] ?? 0 }}</div>
+            </a>
+        </div>
+        <div class="flex gap-2">
+            <a href="{{ route('agenda.create') }}" class="btn btn-neutral gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Add Agenda
+            </a>
+        </div>
+    </div>
+
     <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
         <div class="form-control">
             <div class="flex flex-col sm:flex-row items-center gap-3">
@@ -167,15 +210,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="flex gap-2">
-            <a href="{{ route('agenda.create') }}" class="btn btn-neutral gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                Add Agenda
-            </a>
         </div>
     </div>
 

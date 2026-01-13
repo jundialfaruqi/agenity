@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('link_streaming_youtube')->nullable();
             $table->string('link_lainnya')->nullable();
             $table->string('ket_link_lainnya')->nullable();
+            $table->string('wifi_name')->nullable();
+            $table->string('password_wifi')->nullable();
             $table->text('catatan')->nullable();
             $table->enum('status', ['draft', 'active', 'finished'])->default('draft');
             $table->timestamps();

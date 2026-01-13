@@ -247,15 +247,30 @@
                 </div>
                 <!-- Chat Content -->
                 <div class="flex-1 p-4 overflow-y-auto space-y-4 max-h-80">
-                    <div class="chat chat-start">
+                    <div class="chat chat-end">
                         <div class="chat-image avatar">
                             <div class="w-8 rounded-full">
                                 <img
                                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                             </div>
                         </div>
-                        <div class="chat-bubble chat-bubble-primary text-sm">Halo, apakah agenda rapat koordinasi besok
-                            sudah ada QR Code absensinya?</div>
+                        <div class="chat-bubble chat-bubble-primary text-sm">Halo, bagaimana cara membuat dan melihat
+                            daftar agenda di sistem ini?</div>
+                    </div>
+                    <div class="chat chat-start">
+                        <div class="chat-image avatar">
+                            <div class="w-8 rounded-full">
+                                <img src="https://ui-avatars.com/api/?name=Admin&background=641ae3&color=fff" />
+                            </div>
+                        </div>
+                        <div class="chat-bubble chat-bubble-secondary text-sm">
+                            Halo! Untuk membuat agenda baru, klik
+                            <a href="{{ route('agenda.create') }}"
+                                class="underline font-bold hover:text-white transition-colors">Add Agenda</a>.
+                            Sedangkan untuk melihat daftar semua agenda, kamu bisa buka menu
+                            <a href="{{ route('agenda.index') }}"
+                                class="underline font-bold hover:text-white transition-colors">Agenda</a>.
+                        </div>
                     </div>
                     <div class="chat chat-end">
                         <div class="chat-image avatar">
@@ -264,17 +279,8 @@
                                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                             </div>
                         </div>
-                        <div class="chat-bubble chat-bubble-secondary text-sm">Sudah pak, QR Code otomatis muncul 15
-                            menit sebelum acara dimulai.</div>
-                    </div>
-                    <div class="chat chat-start">
-                        <div class="chat-image avatar">
-                            <div class="w-8 rounded-full">
-                                <img
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                            </div>
-                        </div>
-                        <div class="chat-bubble chat-bubble-primary text-sm">Siap, terima kasih informasinya.</div>
+                        <div class="chat-bubble chat-bubble-primary text-sm">Siap, terima kasih informasinya sangat
+                            membantu!</div>
                     </div>
                 </div>
                 <!-- Input -->
@@ -461,4 +467,30 @@
             </div>
         </div>
     </div>
+    @can('add-agenda')
+        <div class="fab fab-flower fab-bottom fab-end mb-12">
+            <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
+            <div tabindex="0" role="button" class="btn btn-circle btn-lg btn-primary">
+                <svg aria-label="New" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="size-6">
+                    <path
+                        d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                </svg>
+            </div>
+
+            <div class="fab-close">
+                <span class="btn btn-circle btn-lg btn-error">✕</span>
+            </div>
+
+            <!-- buttons that show up when FAB is open -->
+            <a wire:navigate href="{{ route('agenda.create') }}" class="tooltip btn btn-circle btn-lg btn-primary"
+                id="fab-add-agenda" data-tip="Add Agenda">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </a>
+        </div>
+    @endcan
 </x-layout>

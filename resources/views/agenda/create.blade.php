@@ -133,6 +133,18 @@
                     </div>
 
                     <div>
+                        <label class="label"><span class="label-text font-bold mb-2">Nama WiFi (SSID)</span></label>
+                        <input name="wifi_name" type="text" value="{{ old('wifi_name') }}"
+                            class="input input-bordered w-full" placeholder="Contoh: Kantor_OPD_Free">
+                    </div>
+
+                    <div>
+                        <label class="label"><span class="label-text font-bold mb-2">Password WiFi</span></label>
+                        <input name="password_wifi" type="text" value="{{ old('password_wifi') }}"
+                            class="input input-bordered w-full" placeholder="Masukkan password wifi">
+                    </div>
+
+                    <div>
                         <label class="label"><span class="label-text font-bold mb-2">Status Publikasi</span></label>
                         <select name="status" class="select select-bordered w-full" required>
                             <option value="draft" @selected(old('status') === 'draft')>Draft</option>

@@ -20,9 +20,10 @@
     </style>
 </head>
 
-<body class="bg-base-200 min-h-screen flex flex-col">
+<body class="bg-white min-h-screen flex flex-col">
     <!-- Navbar -->
-    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50 px-4 lg:px-20">
+    <div id="mainNavbar" class="navbar sticky top-0 z-50 px-4 lg:px-20
+            transition-all duration-300">
         <div class="flex-1 text-secondary">
             <a href="/" class="flex items-center gap-2">
                 @if ($appSetting && $appSetting->app_logo)
@@ -66,8 +67,7 @@
         <div class="bg-base-100 pb-16">
             <div class="container mx-auto px-4 lg:px-20">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div
-                        class="card rounded-full bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
+                    <div class="card rounded-full bg-base-100 hover:shadow-md transition-shadow">
                         <div class="card-body p-5 flex-row items-center gap-4 text-left">
                             <div class="p-3 bg-primary/10 text-primary rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -83,8 +83,7 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="card rounded-full bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
+                    <div class="card rounded-full bg-base-100 hover:shadow-md transition-shadow">
                         <div class="card-body p-5 flex-row items-center gap-4 text-left">
                             <div class="p-3 bg-success/10 text-success rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -100,8 +99,7 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="card rounded-full bg-base-100 shadow-sm border border-base-200 hover:shadow-md transition-shadow">
+                    <div class="card rounded-full bg-base-100 hover:shadow-md transition-shadow">
                         <div class="card-body p-5 flex-row items-center gap-4 text-left">
                             <div class="p-3 bg-info/10 text-info rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -117,8 +115,7 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="card rounded-full bg-base-100 shadow border border-base-200 hover:shadow-md transition-shadow">
+                    <div class="card rounded-full bg-base-100 hover:shadow-md transition-shadow">
                         <div class="card-body p-5 flex-row items-center gap-4 text-left">
                             <div class="p-3 bg-warning/10 text-warning rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -414,6 +411,22 @@
                 successMsg.classList.add('opacity-0');
             }, 2000);
         }
+
+        const navbar = document.getElementById("mainNavbar");
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add(
+                    "glass",
+                    "backdrop-blur-md"
+                );
+            } else {
+                navbar.classList.remove(
+                    "glass",
+                    "backdrop-blur-md"
+                );
+            }
+        });
     </script>
 </body>
 
