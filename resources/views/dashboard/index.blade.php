@@ -160,7 +160,7 @@
                                     <td>
                                         <div class="flex items-center gap-3">
                                             <div class="avatar">
-                                                <div class="mask mask-squircle w-10 h-10 bg-base-200">
+                                                <div class="w-10 h-10">
                                                     @if ($agenda->opdMaster && $agenda->opdMaster->logo_url)
                                                         <img src="{{ $agenda->opdMaster->logo_url }}"
                                                             alt="{{ $agenda->opdMaster->name }}" />
@@ -186,8 +186,9 @@
                                     <td>
                                         <div class="text-xs font-semibold">
                                             {{ \Carbon\Carbon::parse($agenda->date)->format('d M Y') }}</div>
-                                        <div class="text-[10px] opacity-60">{{ substr($agenda->start_time, 0, 5) }} -
-                                            {{ substr($agenda->end_time, 0, 5) }}</div>
+                                        <div class="text-[10px] opacity-60">
+                                            {{ \Carbon\Carbon::parse($agenda->start_time)->format('H:i') }} -
+                                            {{ \Carbon\Carbon::parse($agenda->end_time)->format('H:i') }}</div>
                                     </td>
                                     <td>
                                         <span

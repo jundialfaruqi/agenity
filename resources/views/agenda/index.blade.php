@@ -263,8 +263,9 @@
                                 <td>
                                     <div class="text-sm font-medium">
                                         {{ \Carbon\Carbon::parse($agenda->date)->translatedFormat('d F Y') }}</div>
-                                    <div class="text-xs opacity-70">{{ $agenda->start_time }} -
-                                        {{ $agenda->end_time }}</div>
+                                    <div class="text-xs opacity-70">
+                                        {{ \Carbon\Carbon::parse($agenda->start_time)->format('H:i') }} -
+                                        {{ \Carbon\Carbon::parse($agenda->end_time)->format('H:i') }}</div>
                                     <div class="text-xs italic mt-1">{{ $agenda->location ?? 'Online' }}</div>
                                 </td>
                                 <td>

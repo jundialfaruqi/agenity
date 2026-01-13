@@ -140,7 +140,7 @@
             <div class="container mx-auto px-4 lg:px-20">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                     <div>
-                        <h2 class="text-3xl font-bold tracking-tight mb-2">Agenda Publik Aktif</h2>
+                        <h2 class="text-3xl font-bold tracking-tight mb-2">Agenda Pemko Aktif</h2>
                         <p class="text-base-content/60">Daftar kegiatan yang sedang berlangsung dan dapat diikuti
                             secara publik.</p>
                     </div>
@@ -166,7 +166,8 @@
                         </div>
                     </div>
                 @else
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" data-aos="zoom-in"
+                        data-aos-anchor-placement="top-center">
                         @foreach ($agendas as $agenda)
                             <div
                                 class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group overflow-hidden flex flex-col h-full">
@@ -236,7 +237,8 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                             </svg>
-                                            {{ $agenda->start_time }} - {{ $agenda->end_time }} WIB
+                                            {{ \Carbon\Carbon::parse($agenda->start_time)->format('H:i') }} -
+                                            {{ \Carbon\Carbon::parse($agenda->end_time)->format('H:i') }} WIB
                                         </div>
                                         <div class="flex items-center gap-3 text-sm text-base-content/60">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"

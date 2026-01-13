@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <td class="info-label">Waktu</td>
-            <td>: {{ $agenda->start_time }} - {{ $agenda->end_time }} WIB</td>
+            <td>: {{ \Carbon\Carbon::parse($agenda->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($agenda->end_time)->format('H:i') }} WIB</td>
         </tr>
         <tr>
             <td class="info-label">Lokasi</td>

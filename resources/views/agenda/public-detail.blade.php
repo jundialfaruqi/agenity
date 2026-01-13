@@ -279,8 +279,9 @@
                                         <div
                                             class="text-xs text-base-content/50 font-bold uppercase tracking-wider mb-1">
                                             Waktu</div>
-                                        <div class="text-base font-bold text-base-content">{{ $agenda->start_time }} -
-                                            {{ $agenda->end_time }} WIB</div>
+                                        <div class="text-base font-bold text-base-content">
+                                            {{ \Carbon\Carbon::parse($agenda->start_time)->format('H:i') }} -
+                                            {{ \Carbon\Carbon::parse($agenda->end_time)->format('H:i') }} WIB</div>
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
