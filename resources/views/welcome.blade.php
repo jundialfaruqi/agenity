@@ -138,17 +138,32 @@
         <!-- Agendas Section -->
         <div id="agendas" class="py-20 bg-base-100">
             <div class="container mx-auto px-4 lg:px-20">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-                    <div>
+                <div class="mb-12">
+                    <div class="mb-8">
                         <h2 class="text-3xl font-bold tracking-tight mb-2">Agenda Pemko Aktif</h2>
-                        <p class="text-base-content/60">Daftar kegiatan yang sedang berlangsung dan dapat diikuti
-                            secara publik.</p>
+                        <p class="text-base-content/60">Daftar kegiatan yang sedang berlangsung dan akan berlangsung di
+                            lingkungan Pemko Pekanbaru.</p>
                     </div>
-                    <div class="hidden md:block">
-                        <span class="badge badge-lg badge-secondary gap-2 p-4">
-                            <div class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-                            {{ $agendas->total() }} Agenda Ditemukan
-                        </span>
+
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="tabs tabs-boxed bg-base-200 p-1 rounded-xl">
+                            <a href="{{ route('welcome') }}#agendas"
+                                class="tab {{ $currentFilter === 'all' ? 'tab-active bg-secondary! text-white! rounded-l-lg' : 'border-r border-dotted border-base-content/20' }}">Semua</a>
+                            <a href="{{ route('welcome', ['filter' => 'today']) }}#agendas"
+                                class="tab {{ $currentFilter === 'today' ? 'tab-active bg-secondary! text-white!' : 'border-r border-dotted border-base-content/20' }}">Hari
+                                Ini</a>
+                            <a href="{{ route('welcome', ['filter' => 'tomorrow']) }}#agendas"
+                                class="tab {{ $currentFilter === 'tomorrow' ? 'tab-active bg-secondary! text-white!' : 'border-r border-dotted border-base-content/20' }}">Besok</a>
+                            <a href="{{ route('welcome', ['filter' => '7_days']) }}#agendas"
+                                class="tab {{ $currentFilter === '7_days' ? 'tab-active bg-secondary! text-white! rounded-r-lg' : '' }}">7
+                                Hari Ke Depan</a>
+                        </div>
+                        <div class="hidden md:block">
+                            <span class="badge badge-lg badge-secondary gap-2 p-4">
+                                <div class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                                {{ $agendas->total() }} Agenda Ditemukan
+                            </span>
+                        </div>
                     </div>
                 </div>
 

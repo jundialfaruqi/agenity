@@ -8,17 +8,41 @@ use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
 {
-    public function index(AgendaService $service)
+    public function index(Request $request, AgendaService $service)
     {
         $stats = $service->getStats();
 
-        $agendas = Agenda::query()
+        // Security: Validate and sanitize filter input
+        $allowedFilters = ['all', 'today', 'tomorrow', '7_days'];
+        $currentFilter = $request->get('filter', 'all');
+        if (!in_array($currentFilter, $allowedFilters)) {
+            $currentFilter = 'all';
+        }
+
+        $agendasQuery = Agenda::query()
             ->with(['opdMaster', 'sessions'])
             ->where('status', 'active')
-            ->where('visibility', 'public')
-            ->orderBy('date', 'desc')
-            ->orderBy('start_time', 'desc')
-            ->paginate(10);
+            ->where('visibility', 'public');
+
+        // Apply filters using Laravel Query Builder (Prepared Statements)
+        $today = \Carbon\Carbon::now('Asia/Jakarta')->toDateString();
+        $tomorrow = \Carbon\Carbon::now('Asia/Jakarta')->addDay()->toDateString();
+        $next7Days = \Carbon\Carbon::now('Asia/Jakarta')->addDays(6)->toDateString();
+
+        if ($currentFilter === 'today') {
+            $agendasQuery->whereDate('date', $today);
+        } elseif ($currentFilter === 'tomorrow') {
+            $agendasQuery->whereDate('date', $tomorrow);
+        } elseif ($currentFilter === '7_days') {
+            $agendasQuery->whereBetween('date', [$today, $next7Days]);
+        }
+        // If filter is 'all', no date filter is applied
+
+        $agendas = $agendasQuery
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->paginate(12)
+            ->withQueryString();
 
         // Map agendas to add view-specific attributes
         $agendas->getCollection()->transform(function ($agenda) {
@@ -77,7 +101,7 @@ class LandingPageController extends Controller
             return $agenda;
         });
 
-        return view('welcome', compact('stats', 'agendas'));
+        return view('welcome', compact('stats', 'agendas', 'currentFilter'));
     }
 
     public function showAgenda(Agenda $agenda)
