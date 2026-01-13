@@ -37,7 +37,7 @@
                             <h2 class="text-lg font-bold">{{ $session->session_name }}</h2>
                             <p class="text-sm text-base-content/60">Tipe: <span
                                     class="badge badge-sm badge-ghost">{{ $session->session_type }}</span> | Waktu:
-                                {{ $session->start_at->format('H:i') }} - {{ $session->end_at->format('H:i') }}</p>
+                                {{ $session->start_at->format('H:i') }} - {{ $session->end_at->format('H:i') }} WIB</p>
                         </div>
                         <div class="flex items-center gap-4">
                             <div class="text-right">

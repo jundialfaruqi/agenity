@@ -177,7 +177,7 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <div class="font-bold">
+                                                <div class="font-bold text-xs">
                                                     {{ \Illuminate\Support\Str::words($agenda->title, 4) }}</div>
                                                 <div class="text-[10px] opacity-50">
                                                     {{ $agenda->user->name ?? 'System' }}</div>

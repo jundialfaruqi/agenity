@@ -65,6 +65,17 @@ class AbsensiController extends Controller
             'asal_instansi' => 'required|string|max:255',
             'jabatan_pekerjaan' => 'required|string|max:255',
             'ttd' => 'required|string', // Base64 signature
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.max' => 'Nama lengkap maksimal 255 karakter.',
+            'handphone.required' => 'Nomor HP/WhatsApp wajib diisi.',
+            'handphone.max' => 'Nomor HP maksimal 20 karakter.',
+            'asal_daerah.required' => 'Asal daerah wajib dipilih.',
+            'asal_daerah.in' => 'Pilihan asal daerah tidak valid.',
+            'master_opd_id.exists' => 'OPD yang dipilih tidak valid.',
+            'asal_instansi.required' => 'Asal instansi wajib diisi.',
+            'jabatan_pekerjaan.required' => 'Jabatan/Pekerjaan wajib diisi.',
+            'ttd.required' => 'Tanda tangan wajib diisi.',
         ]);
 
         try {

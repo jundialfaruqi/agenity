@@ -117,12 +117,12 @@
                             <div class="flex gap-4">
                                 <label class="label cursor-pointer gap-2">
                                     <input type="radio" name="asal_daerah" value="dalam_kota"
-                                        class="radio radio-primary" x-model="asal">
+                                        class="radio radio-secondary" x-model="asal">
                                     <span class="label-text">Dalam Kota</span>
                                 </label>
                                 <label class="label cursor-pointer gap-2">
                                     <input type="radio" name="asal_daerah" value="luar_kota"
-                                        class="radio radio-primary" x-model="asal">
+                                        class="radio radio-secondary" x-model="asal">
                                     <span class="label-text">Luar Kota</span>
                                 </label>
                             </div>
@@ -143,15 +143,17 @@
                                     @endforeach
 
                                 </select>
+                                <label class="label">
+                                    <span class="label-text-alt text-primary text-xs">Jika instansi tidak ada di
+                                        daftar,
+                                        pilih
+                                        <strong>Lainnya</strong> dan ketik manual di kolom bawah ini.</span>
+                                </label>
                                 <input name="asal_instansi" id="asal_instansi" type="text"
                                     placeholder="Ketik nama instansi anda disini..."
                                     class="input input-bordered w-full"
                                     value="{{ old('asal_instansi', Auth::user()->opdMaster->name ?? '') }}">
-                                <label class="label">
-                                    <span class="label-text-alt text-error text-xs">Jika instansi tidak ada di daftar,
-                                        pilih
-                                        <strong>Lainnya</strong> dan ketik manual di kolom atas.</span>
-                                </label>
+
                             </div>
                             @error('asal_instansi')
                                 <span class="text-xs text-error mt-1">{{ $message }}</span>
