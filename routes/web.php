@@ -7,6 +7,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OpdMasterController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\UploadController;
 use App\Http\Middleware\RequireLogin;
 use App\Livewire\Profile;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,9 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(fu
     Route::delete('/agenda/{agenda}', [AgendaController::class, 'destroy'])->name('agenda.destroy')->middleware([RequireLogin::class, 'permission:delete-agenda']);
     Route::get('/agenda/{agenda}/export', [AgendaController::class, 'export'])->name('agenda.export')->middleware([RequireLogin::class, 'permission:export-absensi']);
     Route::get('/agenda/{agenda}/absensi', [AgendaController::class, 'showAbsensi'])->name('agenda.absensi')->middleware([RequireLogin::class, 'permission:view-agenda']);
+
+    // Editor Upload
+    Route::post('/editor-upload', [UploadController::class, 'uploadImage'])->name('editor.upload');
 });
 
 // Public Absensi Route

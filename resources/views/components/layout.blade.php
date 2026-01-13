@@ -18,6 +18,13 @@
     @livewireStyles
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/js/tom-select.complete.min.js"></script>
+
+    <!-- jQuery for Summernote -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Summernote Lite (No Bootstrap Dependency) -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
     <style>
         /* Custom scrollbar for sidebar if needed */
         .no-scrollbar::-webkit-scrollbar {
@@ -29,6 +36,7 @@
             scrollbar-width: none;
         }
     </style>
+    @stack('styles')
 </head>
 
 <body class="bg-base-200 font-sans text-base-content">

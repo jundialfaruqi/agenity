@@ -27,6 +27,7 @@ class Agenda extends Model
         'ket_link_lainnya',
         'wifi_name',
         'password_wifi',
+        'content',
         'catatan',
         'status',
     ];

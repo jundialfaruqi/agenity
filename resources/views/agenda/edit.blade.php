@@ -1,4 +1,32 @@
 <x-layout title="Edit Agenda">
+    @push('styles')
+        <style>
+            .note-editor.note-frame {
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                background: white;
+            }
+
+            .note-editor .note-editable {
+                background: white;
+                color: #1f2937;
+            }
+
+            .note-modal-content {
+                background: white;
+                color: #1f2937;
+            }
+
+            .note-modal-header {
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .note-modal-footer {
+                border-top: 1px solid #e5e7eb;
+            }
+        </style>
+    @endpush
+
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
         <div>
             <h1 class="text-xl font-bold">Edit Agenda</h1>
@@ -13,7 +41,7 @@
         </div>
     </div>
 
-    <div class="card bg-base-100 shadow-sm">
+    <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body">
             <form action="{{ route('agenda.update', $agenda->id) }}" method="POST" class="space-y-6">
                 @csrf
@@ -162,6 +190,19 @@
                     </div>
 
                     <div class="md:col-span-2">
+                        <label class="label"><span class="label-text font-bold mb-2">Konten Detail Agenda
+                                (Opsional)</span></label>
+                        <div class="prose max-w-none">
+                            <textarea name="content" id="editor" class="hidden">{{ old('content', $agenda->content) }}</textarea>
+                        </div>
+                        @error('content')
+                            <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                        @enderror
+                        <p class="text-xs text-base-content/50 mt-2">Gunakan editor ini untuk menulis detail agenda
+                            seperti artikel (bisa gambar, list, bold, dll).</p>
+                    </div>
+
+                    <div class="md:col-span-2">
                         <label class="label"><span class="label-text font-bold mb-2">Catatan Tambahan</span></label>
                         <textarea name="catatan" class="textarea textarea-bordered w-full h-24"
                             placeholder="Masukkan informasi tambahan jika ada">{{ old('catatan', $agenda->catatan) }}</textarea>
@@ -175,4 +216,51 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#editor').summernote({
+                    tabsize: 2,
+                    height: 400,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ],
+                    callbacks: {
+                        onImageUpload: function(files) {
+                            uploadImage(files[0]);
+                        }
+                    }
+                });
+
+                function uploadImage(file) {
+                    let data = new FormData();
+                    data.append("file", file);
+                    data.append("_token", "{{ csrf_token() }}");
+
+                    $.ajax({
+                        url: "{{ route('editor.upload') }}",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        type: "POST",
+                        success: function(url) {
+                            $('#editor').summernote('insertImage', url);
+                        },
+                        error: function(data) {
+                            let response = data.responseJSON;
+                            alert(response.error.message || "Gagal mengunggah gambar.");
+                        }
+                    });
+                }
+            });
+        </script>
+    @endpush
 </x-layout>

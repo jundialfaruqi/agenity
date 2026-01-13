@@ -118,6 +118,7 @@ class AgendaController extends Controller
             'ket_link_lainnya' => 'nullable|string|max:255',
             'wifi_name' => 'nullable|string|max:255',
             'password_wifi' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
             'catatan' => 'nullable|string',
             'status' => 'required|in:draft,active,finished',
         ]);
@@ -173,6 +174,7 @@ class AgendaController extends Controller
             'ket_link_lainnya' => 'nullable|string|max:255',
             'wifi_name' => 'nullable|string|max:255',
             'password_wifi' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
             'catatan' => 'nullable|string',
             'status' => 'required|in:draft,active,finished',
         ]);

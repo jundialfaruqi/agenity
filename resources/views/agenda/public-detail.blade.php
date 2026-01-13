@@ -17,14 +17,38 @@
         body {
             font-family: 'Instrument Sans', sans-serif;
         }
+
+        .agenda-detail-body img {
+            display: block !important;
+            margin: 1.5rem auto !important;
+            max-width: 100% !important;
+            height: auto !important;
+            border-radius: 1rem;
+            float: none !important;
+        }
+
+        /* Ensure images inside paragraphs or other containers are centered */
+        .agenda-detail-body p,
+        .agenda-detail-body div {
+            text-align: center;
+        }
+
+        /* Reset text alignment for non-image content to left */
+        .agenda-detail-body p:not(:has(img)) {
+            text-align: left;
+        }
+
+        /* If :has is not supported, at least the images themselves are block + margin auto */
+        .agenda-detail-body {
+            line-height: 1.8;
+            color: currentColor;
+        }
     </style>
 </head>
 
-<body x-data="{ scrolled: false }" x-on:scroll.window="scrolled = (window.scrollY > 10)"
-    class="bg-base-200 min-h-screen flex flex-col">
+<body class="bg-white min-h-screen flex flex-col">
     <!-- Navbar -->
-    <div class="navbar sticky top-0 z-50 px-4 lg:px-20 transition-all duration-300 bg-base-100"
-        :class="{ 'bg-opacity-80 backdrop-blur-md shadow-sm': scrolled, 'bg-opacity-100': !scrolled }">
+    <div id="mainNavbar" class="navbar sticky top-0 z-50 px-4 lg:px-20 transition-all duration-300">
         <div class="flex-1 text-secondary">
             <a href="/" class="flex items-center gap-2">
                 @if ($appSetting && $appSetting->app_logo)
@@ -41,8 +65,11 @@
                 </span>
             </a>
         </div>
-        <div class="flex-none">
-            <a href="{{ route('welcome') }}" class="btn btn-ghost btn-sm gap-2">
+        <div class="flex-none gap-2">
+            @auth
+                <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm rounded-lg">Dashboard</a>
+            @endauth
+            <a href="{{ route('welcome') }}" class="btn btn-ghost btn-sm gap-2 rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -74,7 +101,7 @@
                             <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight mb-4 text-base-content">
                                 {{ $agenda->title }}</h1>
 
-                            <div class="flex items-center gap-4 p-4 bg-base-200 rounded-2xl mb-8">
+                            <div class="flex items-center gap-4 p-4 bg-base-200 rounded-2xl mb-4">
                                 <div class="avatar placeholder">
                                     <div class="bg-base text-primary-content rounded-lg w-12">
                                         @if ($agenda->opdMaster->logo_url)
@@ -93,7 +120,16 @@
                                 </div>
                             </div>
 
-                            <div class="prose max-w-none text-base-content/80 leading-relaxed mb-8">
+                            <div class="max-w-none text-base-content/80 leading-relaxed mb-8">
+                                @if ($agenda->content)
+                                    <div class="agenda-content">
+                                        <div class="agenda-detail-body">
+                                            {!! $agenda->content !!}
+                                        </div>
+                                    </div>
+                                    <div class="border-t-2 border-dotted border-base-300 my-10"></div>
+                                @endif
+
                                 <h3 class="text-xl font-bold text-base-content mb-3">Catatan Agenda</h3>
                                 {!! nl2br(e($agenda->catatan ?? 'Tidak ada catatan tambahan untuk agenda ini.')) !!}
 
@@ -247,7 +283,7 @@
                                 @endif
                             </div>
 
-                            <div class="divider"></div>
+                            <div class="border-t-2 border-dotted border-base-300 mb-8"></div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="flex gap-4">
@@ -444,20 +480,36 @@
     </footer>
 
     <script>
+        const navbar = document.getElementById("mainNavbar");
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add(
+                    "glass",
+                    "backdrop-blur-md"
+                );
+            } else {
+                navbar.classList.remove(
+                    "glass",
+                    "backdrop-blur-md"
+                );
+            }
+        });
+
         function toggleWifiPass(btn) {
             const passText = document.getElementById('wifi-pass-text');
-            const passPlaceholder = document.getElementById('wifi-pass-placeholder');
+            const placeholder = document.getElementById('wifi-pass-placeholder');
             const iconShow = document.getElementById('pw-icon-show');
             const iconHide = document.getElementById('pw-icon-hide');
 
             if (passText.style.display === 'none') {
                 passText.style.display = 'inline';
-                passPlaceholder.style.display = 'none';
+                placeholder.style.display = 'none';
                 iconShow.classList.add('hidden');
                 iconHide.classList.remove('hidden');
             } else {
                 passText.style.display = 'none';
-                passPlaceholder.style.display = 'inline';
+                placeholder.style.display = 'inline';
                 iconShow.classList.remove('hidden');
                 iconHide.classList.add('hidden');
             }
@@ -465,18 +517,18 @@
 
         function toggleLinkVisibility(btn) {
             const linkText = document.getElementById('link-display-text');
-            const linkPlaceholder = document.getElementById('link-display-placeholder');
-            const iconShow = document.getElementById('icon-show');
-            const iconHide = document.getElementById('icon-hide');
+            const placeholder = document.getElementById('link-display-placeholder');
+            const iconShow = btn.querySelector('#icon-show');
+            const iconHide = btn.querySelector('#icon-hide');
 
             if (linkText.classList.contains('hidden')) {
                 linkText.classList.remove('hidden');
-                linkPlaceholder.classList.add('hidden');
+                placeholder.classList.add('hidden');
                 iconShow.classList.add('hidden');
                 iconHide.classList.remove('hidden');
             } else {
                 linkText.classList.add('hidden');
-                linkPlaceholder.classList.remove('hidden');
+                placeholder.classList.remove('hidden');
                 iconShow.classList.remove('hidden');
                 iconHide.classList.add('hidden');
             }

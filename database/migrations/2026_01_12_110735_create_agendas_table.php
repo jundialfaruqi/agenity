@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('ket_link_lainnya')->nullable();
             $table->string('wifi_name')->nullable();
             $table->string('password_wifi')->nullable();
+            $table->longText('content')->nullable();
             $table->text('catatan')->nullable();
             $table->enum('status', ['draft', 'active', 'finished'])->default('draft');
             $table->timestamps();
