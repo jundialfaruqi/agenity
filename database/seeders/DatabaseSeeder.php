@@ -177,7 +177,7 @@ class DatabaseSeeder extends Seeder
 
         $opdData = [
             [
-                'name' => 'Dinas Komunikasi Informatika dan Statistik',
+                'name' => 'Dinas Komunikasi Informatika Statistik dan Persandian Pekanbaru',
                 'singkatan' => 'DISKOMINFO',
                 'address_opd' => 'Jl. A. Rahman Hamid - Komplek Perkantoran Walikota Pekanbaru Gedung Utama Lt. 3',
                 'catatan' => 'Dinas kominfo hanya boleh 1 admin, jika ada penambahan mohon konfirmasi ke dinas KOMINFO.',
