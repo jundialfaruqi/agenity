@@ -56,6 +56,21 @@ class DatabaseSeeder extends Seeder
                 $this->command->info("✔ Created {$dir} directory.");
             }
         }
+
+        // Clean public/uploads/editor
+        $editorPath = public_path('uploads/editor');
+        if (File::exists($editorPath)) {
+            $editorFiles = File::files($editorPath);
+            if (count($editorFiles) > 0) {
+                File::cleanDirectory($editorPath);
+                $this->command->info("✔ Cleaned public/uploads/editor directory.");
+            } else {
+                $this->command->info("✔ public/uploads/editor is already clean.");
+            }
+        } else {
+            File::makeDirectory($editorPath, 0755, true);
+            $this->command->info("✔ Created public/uploads/editor directory.");
+        }
         $this->command->newLine();
 
         // 1. Create Permissions
