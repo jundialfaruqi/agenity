@@ -103,7 +103,7 @@ class DashboardController extends Controller
         } else {
             $upcomingAgendasQuery->whereBetween('date', [
                 Carbon::now()->toDateString(),
-                Carbon::now()->addDays(7)->toDateString()
+                Carbon::now()->addDays(6)->toDateString()
             ]);
         }
 
@@ -182,15 +182,18 @@ class DashboardController extends Controller
         $lineChartData = [
             'agenda' => [],
             'absensi' => [],
-            'labels' => []
+            'labels' => [],
+            'full_labels' => []
         ];
 
         for ($i = 6; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i);
             $lineChartData['labels'][] = $date->format('d/m');
+            $lineChartData['full_labels'][] = $date->translatedFormat('d M');
 
-            // Agenda count (Global)
-            $agendaCount = \App\Models\Agenda::whereDate('date', $date->toDateString())->count();
+            // Agenda count (All Status)
+            $agendaCount = \App\Models\Agenda::whereDate('date', $date->toDateString())
+                ->count();
             $lineChartData['agenda'][] = $agendaCount;
         }
 
@@ -201,11 +204,23 @@ class DashboardController extends Controller
             $points = "";
             foreach ($data as $i => $val) {
                 $x = $i * (300 / 6);
-                $y = 100 - (($val / $maxLineVal) * 80 + 10); // Scale to fit 10-90 range
+                $y = 100 - (($val / $maxLineVal) * 60 + 20); // Scale to fit 20-80 range to leave space for labels
                 $points .= ($i == 0 ? "M" : " L") . "$x,$y";
             }
             return $points;
         };
+
+        $chartDataRaw = [];
+        foreach ($lineChartData['agenda'] as $i => $val) {
+            $x = $i * (300 / 6);
+            $y = 100 - (($val / $maxLineVal) * 60 + 20);
+            $chartDataRaw[] = [
+                'x' => $x,
+                'y' => $y,
+                'value' => $val,
+                'label' => $lineChartData['full_labels'][$i]
+            ];
+        }
 
         $agendaPoints = $getPoints($lineChartData['agenda']);
 
@@ -225,6 +240,7 @@ class DashboardController extends Controller
             'availableYears',
             'agendaPoints',
             'totalAgendaLast7Days',
+            'chartDataRaw',
             'opdLabels',
             'opdChartData',
             'opdChartDataScaled',

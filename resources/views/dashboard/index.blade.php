@@ -131,7 +131,11 @@
         <div class="card bg-base-100 shadow-sm col-span-1 lg:col-span-2">
             <div class="card-body p-0">
                 <div class="p-6 flex justify-between items-center border-b border-base-200">
-                    <h3 class="font-bold text-lg">Agenda Aktif Mendatang</h3>
+                    <div>
+                        <h3 class="font-bold text-lg">Agenda Aktif Mendatang</h3>
+                        <p class="text-xs text-base-content/50">Daftar agenda dengan status aktif yang akan segera
+                            dilaksanakan.</p>
+                    </div>
                     <div class="tabs tabs-boxed bg-transparent p-0">
                         <a href="{{ route('dashboard.index', array_merge(request()->query(), ['agenda_filter' => '7_days'])) }}"
                             class="tab btn-sm rounded-lg {{ $agendaFilter === '7_days' ? 'tab-active bg-base-300 text-base-content rounded-btn' : '' }}">7
@@ -321,6 +325,11 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="pt-4 border-t mt-auto border-base-200">
+                    <p class="text-[10px] text-base-content/50 italic">
+                        * Grafik ini menampilkan 10 OPD dengan total agenda terbanyak
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -444,14 +453,14 @@
                         <p class="text-xs text-base-content/60">Total Agenda</p>
                         <p class="font-bold text-lg">{{ $totalAgendaLast7Days }}</p>
                         <span class="text-[10px] flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-primary"></span> Agenda
+                            <span class="w-2 h-2 rounded-full bg-primary"></span> Riwayat Agenda
                         </span>
                     </div>
                 </div>
 
                 <!-- Line Chart SVG -->
-                <div class="h-40 relative flex items-end">
-                    <svg viewBox="0 0 300 100" class="w-full h-full overflow-visible">
+                <div class="h-48 relative flex items-end">
+                    <svg viewBox="0 0 300 120" class="w-full h-full overflow-visible">
                         <!-- Background Grid -->
                         <line x1="0" y1="20" x2="300" y2="20" stroke="currentColor"
                             class="text-base-content/5" stroke-width="1" />
@@ -463,7 +472,27 @@
                         <!-- Agenda Path (Primary) -->
                         <path d="{{ $agendaPoints }}" fill="none" stroke="currentColor" class="text-primary"
                             stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+                        <!-- Data Points, Values, and Labels -->
+                        @foreach ($chartDataRaw as $point)
+                            <!-- Circle point -->
+                            <circle cx="{{ $point['x'] }}" cy="{{ $point['y'] }}" r="4"
+                                class="fill-primary stroke-base-100" stroke-width="2" />
+
+                            <!-- Value text -->
+                            <text x="{{ $point['x'] }}" y="{{ $point['y'] - 10 }}" text-anchor="middle"
+                                class="text-[10px] font-bold fill-base-content">{{ $point['value'] }}</text>
+
+                            <!-- Date label -->
+                            <text x="{{ $point['x'] }}" y="115" text-anchor="middle"
+                                class="text-[9px] fill-base-content/50">{{ $point['label'] }}</text>
+                        @endforeach
                     </svg>
+                </div>
+                <div class="pt-4 border-t mt-auto border-base-200">
+                    <p class="text-[10px] text-base-content/50 italic">
+                        * Grafik ini menampilkan total seluruh agenda (Active, Draft, Finished) selama 7 hari terakhir.
+                    </p>
                 </div>
             </div>
         </div>

@@ -94,8 +94,8 @@
                             </div>
 
                             <div class="prose max-w-none text-base-content/80 leading-relaxed mb-8">
-                                <h3 class="text-xl font-bold text-base-content mb-3">Deskripsi Agenda</h3>
-                                {!! nl2br(e($agenda->catatan ?? 'Tidak ada deskripsi tambahan untuk agenda ini.')) !!}
+                                <h3 class="text-xl font-bold text-base-content mb-3">Catatan Agenda</h3>
+                                {!! nl2br(e($agenda->catatan ?? 'Tidak ada catatan tambahan untuk agenda ini.')) !!}
 
                                 @if ($agenda->wifi_name || $agenda->password_wifi)
                                     <div class="mt-8 p-6 bg-primary/5 border border-primary/10 rounded-2xl">
