@@ -17,32 +17,6 @@
         body {
             font-family: 'Instrument Sans', sans-serif;
         }
-
-        .agenda-detail-body img {
-            display: block !important;
-            margin: 1.5rem auto !important;
-            max-width: 100% !important;
-            height: auto !important;
-            border-radius: 1rem;
-            float: none !important;
-        }
-
-        /* Ensure images inside paragraphs or other containers are centered */
-        .agenda-detail-body p,
-        .agenda-detail-body div {
-            text-align: center;
-        }
-
-        /* Reset text alignment for non-image content to left */
-        .agenda-detail-body p:not(:has(img)) {
-            text-align: left;
-        }
-
-        /* If :has is not supported, at least the images themselves are block + margin auto */
-        .agenda-detail-body {
-            line-height: 1.8;
-            color: currentColor;
-        }
     </style>
 </head>
 
@@ -101,7 +75,7 @@
                             <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight mb-4 text-base-content">
                                 {{ $agenda->title }}</h1>
 
-                            <div class="flex items-center gap-4 p-4 bg-base-200 rounded-2xl mb-4">
+                            <div class="flex items-center gap-4 p-4 bg-base-200 rounded-2xl">
                                 <div class="avatar placeholder">
                                     <div class="bg-base text-primary-content rounded-lg w-12">
                                         @if ($agenda->opdMaster->logo_url)
@@ -122,15 +96,15 @@
 
                             <div class="max-w-none text-base-content/80 leading-relaxed mb-8">
                                 @if ($agenda->content)
-                                    <div class="agenda-content">
+                                    <div class="agenda-content mb-12">
                                         <div class="agenda-detail-body">
                                             {!! $agenda->content !!}
                                         </div>
                                     </div>
-                                    <div class="border-t-2 border-dotted border-base-300 my-10"></div>
+                                    <div class="border-t-2 border-dotted border-base-300"></div>
                                 @endif
 
-                                <h3 class="text-xl font-bold text-base-content mb-3">Catatan Agenda</h3>
+                                <h3 class="text-xl font-bold text-base-content mt-8 mb-3">Catatan Agenda</h3>
                                 {!! nl2br(e($agenda->catatan ?? 'Tidak ada catatan tambahan untuk agenda ini.')) !!}
 
                                 @if ($agenda->wifi_name || $agenda->password_wifi)

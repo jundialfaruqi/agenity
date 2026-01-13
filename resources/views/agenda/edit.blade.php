@@ -1,30 +1,5 @@
 <x-layout title="Edit Agenda">
     @push('styles')
-        <style>
-            .note-editor.note-frame {
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                background: white;
-            }
-
-            .note-editor .note-editable {
-                background: white;
-                color: #1f2937;
-            }
-
-            .note-modal-content {
-                background: white;
-                color: #1f2937;
-            }
-
-            .note-modal-header {
-                border-bottom: 1px solid #e5e7eb;
-            }
-
-            .note-modal-footer {
-                border-top: 1px solid #e5e7eb;
-            }
-        </style>
     @endpush
 
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
@@ -222,7 +197,7 @@
             $(document).ready(function() {
                 $('#editor').summernote({
                     tabsize: 2,
-                    height: 400,
+                    minHeight: 400,
                     toolbar: [
                         ['style', ['style']],
                         ['font', ['bold', 'underline', 'clear']],
@@ -235,6 +210,9 @@
                     callbacks: {
                         onImageUpload: function(files) {
                             uploadImage(files[0]);
+                        },
+                        onMediaDelete: function(target) {
+                            deleteImage(target[0].src);
                         }
                     }
                 });
@@ -257,6 +235,24 @@
                         error: function(data) {
                             let response = data.responseJSON;
                             alert(response.error.message || "Gagal mengunggah gambar.");
+                        }
+                    });
+                }
+
+                function deleteImage(src) {
+                    $.ajax({
+                        data: {
+                            src: src,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        type: "POST",
+                        url: "{{ route('editor.delete') }}",
+                        cache: false,
+                        success: function(response) {
+                            console.log(response.message);
+                        },
+                        error: function(data) {
+                            console.log(data);
                         }
                     });
                 }

@@ -50,6 +50,7 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(fu
 
     // Editor Upload
     Route::post('/editor-upload', [UploadController::class, 'uploadImage'])->name('editor.upload');
+    Route::post('/editor-delete', [UploadController::class, 'deleteImage'])->name('editor.delete');
 });
 
 // Public Absensi Route

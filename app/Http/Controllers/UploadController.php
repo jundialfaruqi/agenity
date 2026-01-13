@@ -57,4 +57,25 @@ class UploadController extends Controller
             'error' => ['message' => 'Gagal mengunggah gambar.']
         ], 400);
     }
+
+    public function deleteImage(Request $request)
+    {
+        $src = $request->src;
+        if (!$src) {
+            return response()->json(['success' => false, 'message' => 'No source provided'], 400);
+        }
+
+        // Ambil path relatif dari URL
+        // Contoh URL: http://localhost:8000/uploads/editor/image_123.jpg
+        // Kita butuh: uploads/editor/image_123.jpg
+        $path = str_replace(asset(''), '', $src);
+        $fullPath = public_path($path);
+
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+            return response()->json(['success' => true, 'message' => 'File deleted successfully']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'File not found: ' . $fullPath], 404);
+    }
 }

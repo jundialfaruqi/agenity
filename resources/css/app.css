@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @plugin 'daisyui';
+@import './agenda-content.css';
+@import './summernote-overrides.css';
 
 @plugin "daisyui/theme" {
   name: "light";

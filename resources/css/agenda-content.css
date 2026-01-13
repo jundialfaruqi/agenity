@@ -1,0 +1,105 @@
+/* Shared styles for Agenda Content (Public Detail & Editor) */
+
+.agenda-detail-body,
+.note-editable {
+    line-height: 1.8;
+    color: currentColor;
+    text-align: left;
+}
+
+/* Headers */
+.agenda-detail-body h1, .note-editable h1,
+.agenda-detail-body h2, .note-editable h2,
+.agenda-detail-body h3, .note-editable h3,
+.agenda-detail-body h4, .note-editable h4,
+.agenda-detail-body h5, .note-editable h5,
+.agenda-detail-body h6, .note-editable h6 {
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    color: inherit;
+}
+
+.agenda-detail-body h1, .note-editable h1 { font-size: 2rem; }
+.agenda-detail-body h2, .note-editable h2 { font-size: 1.5rem; }
+.agenda-detail-body h3, .note-editable h3 { font-size: 1.25rem; }
+
+/* Code Blocks (Mockup style) */
+.agenda-detail-body pre, .note-editable pre {
+    background-color: #1f2937;
+    color: #f3f4f6;
+    padding: 1.5rem;
+    padding-top: 2.5rem;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-family: monospace;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.agenda-detail-body pre::before, .note-editable pre::before {
+    content: "";
+    position: absolute;
+    top: 0.8rem;
+    left: 1rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: #ff5f56;
+    border-radius: 50%;
+    box-shadow: 1.25rem 0 0 #ffbd2e, 2.5rem 0 0 #27c93f;
+}
+
+/* Inline Code */
+.agenda-detail-body code, .note-editable code {
+    background-color: #f3f4f6;
+    color: #1f2937;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+}
+
+/* Reset code inside pre */
+.agenda-detail-body pre code, .note-editable pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Lists */
+.agenda-detail-body ul, .note-editable ul,
+.agenda-detail-body ol, .note-editable ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.agenda-detail-body ul, .note-editable ul { list-style-type: disc !important; }
+.agenda-detail-body ol, .note-editable ol { list-style-type: decimal !important; }
+
+.agenda-detail-body li, .note-editable li {
+    margin-bottom: 0.5rem;
+}
+
+/* Paragraphs */
+.agenda-detail-body p, .note-editable p {
+    margin-bottom: 1rem;
+}
+
+/* Images */
+.agenda-detail-body img, .note-editable img {
+    display: block !important;
+    margin: 1.5rem auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 1rem;
+    float: none !important;
+}
+
+/* Image alignment helpers */
+.agenda-detail-body p:has(img),
+.agenda-detail-body div:has(img) {
+    text-align: center;
+}
