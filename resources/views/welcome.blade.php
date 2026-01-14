@@ -90,7 +90,7 @@
         </div>
 
         <!-- Agendas Section -->
-        <div id="agendas" class="py-20 bg-base-100">
+        <div id="agendas" class="pb-20 bg-base-100">
             <div class="container mx-auto px-4 lg:px-20">
                 <div class="mb-12">
                     <div class="mb-8">

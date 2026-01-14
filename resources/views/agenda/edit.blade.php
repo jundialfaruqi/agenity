@@ -56,10 +56,10 @@
                     </div>
 
                     {{-- Kolom Kanan: Atribut Lainnya (Lebih Sempit) --}}
-                    <div class="lg:col-span-1 space-y-6">
+                    <div
+                        class="lg:col-span-1 space-y-6 lg:sticky lg:top-0 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2 custom-scrollbar">
                         {{-- Action Buttons --}}
-                        <div
-                            class="bg-base-50/50 p-3 rounded-xl border border-base-200 flex items-center justify-between gap-2">
+                        <div class="bg-base-50/50 rounded-xl flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <button type="submit" name="status" value="active" class="btn btn-secondary btn-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
