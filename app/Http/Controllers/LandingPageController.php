@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Event;
 use App\Models\Survey;
 use App\Models\SurveyToken;
 use App\Services\AgendaService;
@@ -45,7 +46,7 @@ class LandingPageController extends Controller
         $agendas = $agendasQuery
             ->orderBy('date', 'asc')
             ->orderBy('start_time', 'asc')
-            ->paginate(12)
+            ->paginate(6, ['*'], 'agenda_page')
             ->withQueryString();
 
         // Map agendas to add view-specific attributes
@@ -113,10 +114,65 @@ class LandingPageController extends Controller
             ->with(['opd'])
             ->withCount('respondents')
             ->latest()
-            ->take(6)
-            ->get();
+            ->paginate(6, ['*'], 'survey_page')
+            ->withQueryString();
 
-        return view('welcome', compact('stats', 'agendas', 'currentFilter', 'surveys'));
+        // Fetch Public Events
+        $events = Event::where('status', 'active')
+            ->with(['opdMaster'])
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->paginate(6, ['*'], 'event_page')
+            ->withQueryString();
+
+        // Map events to add view-specific attributes
+        $events->getCollection()->transform(function ($event) {
+            $now = \Carbon\Carbon::now('Asia/Jakarta')->startOfDay();
+            $eventDate = \Carbon\Carbon::parse($event->date, 'Asia/Jakarta')->startOfDay();
+            $diff = $now->diffInDays($eventDate, false);
+
+            $timeStatus = [
+                'label' => '',
+                'class' => 'badge-ghost',
+                'text_class' => 'text-base-content/50'
+            ];
+
+            if ($diff == 0) {
+                $timeStatus = [
+                    'label' => 'Hari Ini',
+                    'class' => 'badge-success text-success-content',
+                    'text_class' => 'text-success font-bold'
+                ];
+            } elseif ($diff == 1) {
+                $timeStatus = [
+                    'label' => 'Besok',
+                    'class' => 'badge-info text-info-content',
+                    'text_class' => 'text-info font-medium'
+                ];
+            } elseif ($diff > 1) {
+                $timeStatus = [
+                    'label' => $diff . ' Hari Lagi',
+                    'class' => 'badge-primary text-primary-content',
+                    'text_class' => 'text-primary'
+                ];
+            } elseif ($diff == -1) {
+                $timeStatus = [
+                    'label' => 'Kemarin',
+                    'class' => 'badge-error text-error-content',
+                    'text_class' => 'text-error'
+                ];
+            } else {
+                $timeStatus = [
+                    'label' => abs($diff) . ' Hari Lalu',
+                    'class' => 'badge-ghost',
+                    'text_class' => 'text-base-content/40'
+                ];
+            }
+            $event->time_status = $timeStatus;
+            return $event;
+        });
+
+        return view('welcome', compact('stats', 'agendas', 'currentFilter', 'surveys', 'events'));
     }
 
     public function showAgenda(Agenda $agenda)
@@ -127,6 +183,26 @@ class LandingPageController extends Controller
 
         $agenda->load(['opdMaster', 'sessions', 'user']);
         return view('agenda.public-detail', compact('agenda'));
+    }
+
+    public function showEvent(Event $event)
+    {
+        if ($event->status !== 'active') {
+            abort(404);
+        }
+
+        $event->load(['opdMaster', 'user']);
+
+        // Get 5 upcoming events for sidebar
+        $upcomingEvents = Event::where('status', 'active')
+            ->where('id', '!=', $event->id)
+            ->whereDate('date', '>=', now()->toDateString())
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->take(5)
+            ->get();
+
+        return view('event.public-detail', compact('event', 'upcomingEvents'));
     }
 
     public function surveyDetail($id, Request $request)

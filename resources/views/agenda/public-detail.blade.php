@@ -40,7 +40,7 @@
                                 </div>
                             </div>
 
-                            <div class="max-w-none text-base-content/80 leading-relaxed mb-8">
+                            <div class="max-w-none text-base-content/80 leading-relaxed mb-8 mt-8">
                                 @if ($agenda->content)
                                     <div class="agenda-content mb-12">
                                         <div class="agenda-detail-body">

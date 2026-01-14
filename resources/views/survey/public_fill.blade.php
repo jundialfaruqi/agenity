@@ -1,6 +1,6 @@
 <x-welcome-layout>
     <!-- DEBUG: Render Check -->
-    <div class="bg-base-300 text-[8px] text-center opacity-20">System: Survey View Loaded</div>
+    {{-- <div class="bg-base-300 text-[8px] text-center opacity-20">System: Survey View Loaded</div> --}}
     <div class="grow bg-base-200/50 py-12" x-data="{
         step: 1,
         agreed: false,
@@ -23,7 +23,7 @@
                 </a>
 
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="badge badge-primary badge-sm font-bold">{{ $survey->opd->name }}</div>
+                    <div class="font-bold">{{ $survey->opd->name }}</div>
                     <div class="text-xs text-base-content/50">Berakhir pada
                         {{ $survey->end_date->translatedFormat('d F Y') }}</div>
                 </div>
@@ -36,7 +36,7 @@
 
             <div class="mb-8" x-show="step === 2">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="badge badge-primary badge-sm font-bold">{{ $survey->opd->name }}</div>
+                    <div class="font-bold">{{ $survey->opd->name }}</div>
                 </div>
                 <h1 class="text-3xl font-black mb-3">{{ $survey->title }}</h1>
                 <p class="text-base-content/70">Silakan isi kuesioner di bawah ini sesuai dengan pengalaman Anda.</p>
@@ -57,29 +57,31 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-bold">Nama Lengkap <span
+                                <label class="label mb-2"><span class="label-text font-bold">Nama Lengkap <span
                                             class="text-error">*</span></span></label>
                                 <input type="text" x-model="formData.name" placeholder="Masukkan nama lengkap"
                                     class="input input-bordered w-full" />
                             </div>
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-bold">Nomor WhatsApp <span
-                                            class="text-error">*</span></span></label>
-                                <input type="tel" x-model="formData.phone" placeholder="0812..."
+                                <label class="label mb-2"><span class="label-text font-bold">Nomor Handphone
+                                        <span class="text-error">*</span>
+                                    </span></label>
+                                <input type="tel" x-model="formData.phone" placeholder="082190123456"
                                     class="input input-bordered w-full" />
                             </div>
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-bold">NIK (Opsional)</span></label>
+                                <label class="label mb-2"><span class="label-text font-bold">NIK
+                                        (Opsional)</span></label>
                                 <input type="text" x-model="formData.nik" placeholder="16 digit NIK"
                                     class="input input-bordered w-full" maxlength="16" />
                             </div>
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-bold">Pekerjaan</span></label>
+                                <label class="label mb-2"><span class="label-text font-bold">Pekerjaan</span></label>
                                 <input type="text" x-model="formData.occupation"
                                     placeholder="Contoh: PNS, Swasta, Mahasiswa" class="input input-bordered w-full" />
                             </div>
                             <div class="form-control w-full">
-                                <label class="label"><span class="label-text font-bold">Umur (Tahun)</span></label>
+                                <label class="label mb-2"><span class="label-text font-bold">Umur (Tahun)</span></label>
                                 <input type="number" x-model="formData.age" placeholder="Contoh: 25"
                                     class="input input-bordered w-full" min="1" max="120" />
                             </div>

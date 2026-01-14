@@ -279,13 +279,22 @@
             </div>
         </div>
 
-        <!-- Surveys Section -->
+        <!-- Survei Section -->
         <div id="surveys" class="pb-24 bg-base-200/30">
             <div class="container mx-auto px-4 lg:px-20 pt-20">
                 <div class="mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight mb-2">Survei Masyarakat</h2>
-                    <p class="text-base-content/60">Bantu kami meningkatkan layanan dengan memberikan feedback Anda
-                        melalui survei di bawah ini.</p>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-3xl font-bold tracking-tight mb-2">Survei Masyarakat</h2>
+                            <p class="text-base-content/60">Bantu kami meningkatkan layanan dengan memberikan feedback
+                                Anda melalui survei di bawah ini.</p>
+                        </div>
+                        <div class="hidden md:block">
+                            <span class="badge badge-lg badge-secondary gap-2 p-4">
+                                {{ $surveys->total() }} Survei Aktif
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 @if ($surveys->isEmpty())
@@ -381,6 +390,176 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+
+                    <!-- Pagination for Surveys -->
+                    <div class="flex justify-center mt-12">
+                        {{ $surveys->fragment('surveys')->links() }}
+                    </div>
+                @endif
+            </div>
+        </div>
+        <!-- Events Section -->
+        <div id="events" class="pb-24 bg-base-100">
+            <div class="container mx-auto px-4 lg:px-20 pt-20">
+                <div class="mb-12">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-3xl font-bold tracking-tight mb-2">Event & Kegiatan</h2>
+                            <p class="text-base-content/60">Ikuti berbagai event dan kegiatan menarik yang
+                                diselenggarakan oleh OPD Pemko Pekanbaru.</p>
+                        </div>
+                        <div class="hidden md:block">
+                            <span class="badge badge-lg badge-secondary gap-2 p-4 text-white">
+                                {{ $events->total() }} Event Aktif
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                @if ($events->isEmpty())
+                    <div
+                        class="card bg-base-200 border-2 border-dashed border-base-300 py-16 text-base-content/20 mb-4">
+                        <div class="card-body items-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1" stroke="currentColor" class="size-16">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                            </svg>
+                            <h3 class="text-xl font-bold text-base-content/40">Belum ada event aktif</h3>
+                            <p class="text-base-content/40">Silakan cek kembali di lain waktu.</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        @foreach ($events as $event)
+                            <div
+                                class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group flex flex-col h-full overflow-hidden">
+                                <figure
+                                    class="relative h-48 bg-primary/5 flex items-center justify-center overflow-hidden">
+                                    @if ($event->first_image)
+                                        <div class="absolute inset-0 z-0">
+                                            <img src="{{ $event->first_image }}" alt="Background"
+                                                class="w-full h-full object-cover opacity-30 group-hover:scale-110 transition-transform duration-500" />
+                                            <div
+                                                class="absolute inset-0 bg-linear-to-t from-base-100/50 to-transparent">
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <div class="relative z-10 flex items-center justify-center w-full h-full">
+                                        @if ($event->opdMaster->logo_url)
+                                            <img src="{{ $event->opdMaster->logo_url }}"
+                                                alt="{{ $event->opdMaster->name }}"
+                                                class="w-28 h-28 object-contain group-hover:scale-110 transition-transform duration-500 {{ $event->first_image ? 'drop-shadow-lg' : 'opacity-80' }}" />
+                                        @else
+                                            <div
+                                                class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 {{ $event->first_image ? 'bg-white/80 backdrop-blur-sm shadow-lg' : '' }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-10 h-10">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="absolute top-4 right-4 z-20">
+                                        <div
+                                            class="badge badge-success font-bold shadow-sm uppercase text-[10px] p-2.5">
+                                            AKTIF</div>
+                                    </div>
+                                </figure>
+                                <div class="card-body p-6 flex flex-col grow">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div
+                                            class="badge badge-outline badge-sm text-[10px] uppercase font-bold text-base-content/50">
+                                            {{ $event->jenis_event }}</div>
+                                        <div
+                                            class="badge badge-ghost badge-sm text-[10px] uppercase font-bold text-base-content/50">
+                                            {{ $event->mode }}</div>
+                                    </div>
+                                    <h2
+                                        class="card-title text-xl mb-2 group-hover:text-secondary transition-colors line-clamp-2 min-h-14">
+                                        <a
+                                            href="{{ route('event.public_detail', $event->id) }}">{{ $event->title }}</a>
+                                    </h2>
+                                    <div class="space-y-2 mb-6 grow">
+                                        <div class="flex items-center gap-3 text-sm text-base-content/60 flex-wrap">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-4 h-4 text-primary">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                            </svg>
+                                            {{ \Carbon\Carbon::parse($event->date)->locale('id')->translatedFormat('d F Y') }}
+                                            @if ($event->time_status['label'])
+                                                <span
+                                                    class="badge badge-xs {{ $event->time_status['class'] }} font-bold uppercase">
+                                                    {{ $event->time_status['label'] }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="flex items-center gap-3 text-sm text-base-content/60">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-4 h-4 text-error">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+                                            {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} -
+                                            {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }} WIB
+                                        </div>
+                                        <div class="flex items-center gap-3 text-sm text-base-content/60">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-4 h-4 text-success">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                            </svg>
+                                            <span class="line-clamp-1">{{ $event->location ?? 'Online / TBD' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="flex items-center gap-2 mb-4">
+                                            <div
+                                                class="w-6 h-6 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                                @if ($event->opdMaster->logo_url)
+                                                    <img src="{{ $event->opdMaster->logo_url }}"
+                                                        alt="{{ $event->opdMaster->name }}"
+                                                        class="w-full h-full object-contain">
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-3 h-3 text-base-content/30">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                                                    </svg>
+                                                @endif
+                                            </div>
+                                            <span
+                                                class="text-[10px] font-bold text-base-content/40 uppercase tracking-wider truncate"
+                                                title="{{ $event->opdMaster->name }}">
+                                                {{ $event->opdMaster->name }}
+                                            </span>
+                                        </div>
+                                        <div class="pt-4 border-t border-base-200">
+                                            <div class="card-actions">
+                                                <a href="{{ route('event.public_detail', $event->id) }}"
+                                                    class="btn btn-secondary btn-sm rounded-lg grow">Detail Event</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Pagination for Events -->
+                    <div class="flex justify-center mt-12">
+                        {{ $events->fragment('events')->links() }}
                     </div>
                 @endif
             </div>

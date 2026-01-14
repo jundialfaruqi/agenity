@@ -382,11 +382,11 @@
                 </table>
             </div>
         </div>
-        @if ($agendas->hasPages())
-            <div class="p-4 border-t border-base-200">
-                {{ $agendas->links() }}
-            </div>
-        @endif
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6">
+        {{ $agendas->links() }}
     </div>
 
     <!-- QR Modal -->

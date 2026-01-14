@@ -15,7 +15,7 @@
     </div>
     <div class="flex-none gap-2">
         @auth
-            <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm rounded-lg">Dashboard</a>
+            <a href="{{ url('/dashboard') }}" class="btn btn-secondary btn-sm rounded-lg">Dashboard</a>
         @endauth
 
         @if (Route::currentRouteName() !== 'welcome')

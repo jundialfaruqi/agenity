@@ -121,6 +121,12 @@ class DatabaseSeeder extends Seeder
                 'delete-survey',
                 'view-survey-result',
             ],
+            'event' => [
+                'view-event',
+                'add-event',
+                'edit-event',
+                'delete-event',
+            ],
         ];
 
         foreach ($permissions as $group => $permissionList) {
@@ -173,10 +179,10 @@ class DatabaseSeeder extends Seeder
         $userExampleRole->syncPermissions($examplePermissions);
         $this->command->info('✔ Example permissions synced to User Example Role.');
 
-        // Sync agenda & survey permissions to Admin OPD Role
-        $adminOpdPermissions = Permission::whereIn('group', ['agenda', 'survey'])->get();
+        // Sync agenda, survey & event permissions to Admin OPD Role
+        $adminOpdPermissions = Permission::whereIn('group', ['agenda', 'survey', 'event'])->get();
         $adminOpdRole->syncPermissions($adminOpdPermissions);
-        $this->command->info('✔ Agenda & Survey permissions synced to Admin OPD Role.');
+        $this->command->info('✔ Agenda, Survey & Event permissions synced to Admin OPD Role.');
 
         // 4. Create OPD Masters
         $this->command->newLine();
@@ -326,56 +332,179 @@ class DatabaseSeeder extends Seeder
         $this->command->comment('Step 7: Creating Sample Survey...');
         $adminUser = User::where('email', 'adminopd@mail.com')->first();
         if ($adminUser) {
-            $survey = \App\Models\Survey::create([
-                'opd_id' => $adminUser->opd_master_id,
-                'created_by' => $adminUser->id,
-                'title' => 'Survei Kepuasan Masyarakat 2026',
-                'description' => 'Kami ingin mendengar pendapat Anda mengenai layanan kami.',
-                'start_date' => now(),
-                'end_date' => now()->addMonth(),
-                'is_active' => true,
-                'visibility' => 'public',
-            ]);
-
-            $questions = [
+            $surveys = [
                 [
-                    'question_text' => 'Bagaimana penilaian Anda terhadap kecepatan layanan kami?',
-                    'type' => 'rating',
-                    'is_required' => true,
+                    'title' => 'Survei Kepuasan Masyarakat 2026',
+                    'description' => 'Kami ingin mendengar pendapat Anda mengenai layanan kami.',
                 ],
                 [
-                    'question_text' => 'Fasilitas apa yang menurut Anda perlu ditingkatkan?',
-                    'type' => 'multiple_choice',
-                    'is_required' => true,
-                    'options' => ['Ruang Tunggu', 'Kebersihan', 'Parkir', 'Sistem Antrean'],
+                    'title' => 'Survei Kebutuhan Fasilitas Publik',
+                    'description' => 'Bantu kami meningkatkan kualitas fasilitas umum di kota ini.',
                 ],
                 [
-                    'question_text' => 'Apakah petugas kami melayani dengan ramah?',
-                    'type' => 'single_choice',
-                    'is_required' => true,
-                    'options' => ['Ya, sangat ramah', 'Cukup ramah', 'Tidak ramah'],
-                ],
-                [
-                    'question_text' => 'Berikan saran atau masukan Anda untuk kami.',
-                    'type' => 'text',
-                    'is_required' => false,
+                    'title' => 'Evaluasi Layanan Digital OPD',
+                    'description' => 'Sejauh mana efektivitas aplikasi layanan publik kami?',
                 ],
             ];
 
-            foreach ($questions as $q) {
-                $question = $survey->questions()->create([
-                    'question_text' => $q['question_text'],
-                    'type' => $q['type'],
-                    'is_required' => $q['is_required'],
+            foreach ($surveys as $sData) {
+                $survey = \App\Models\Survey::create([
+                    'opd_id' => $adminUser->opd_master_id,
+                    'created_by' => $adminUser->id,
+                    'title' => $sData['title'],
+                    'description' => $sData['description'],
+                    'start_date' => now(),
+                    'end_date' => now()->addMonth(),
+                    'is_active' => true,
+                    'visibility' => 'public',
                 ]);
 
-                if (isset($q['options'])) {
-                    foreach ($q['options'] as $optionText) {
-                        $question->options()->create(['option_text' => $optionText]);
+                $questions = [
+                    [
+                        'question_text' => 'Bagaimana penilaian Anda terhadap kualitas layanan kami?',
+                        'type' => 'rating',
+                        'is_required' => true,
+                    ],
+                    [
+                        'question_text' => 'Fasilitas apa yang paling penting bagi Anda?',
+                        'type' => 'multiple_choice',
+                        'is_required' => true,
+                        'options' => ['Ruang Tunggu', 'Kebersihan', 'Parkir', 'Aksesibilitas'],
+                    ],
+                    [
+                        'question_text' => 'Berikan saran Anda.',
+                        'type' => 'text',
+                        'is_required' => false,
+                    ],
+                ];
+
+                foreach ($questions as $q) {
+                    $question = $survey->questions()->create([
+                        'question_text' => $q['question_text'],
+                        'type' => $q['type'],
+                        'is_required' => $q['is_required'],
+                    ]);
+
+                    if (isset($q['options'])) {
+                        foreach ($q['options'] as $optionText) {
+                            $question->options()->create(['option_text' => $optionText]);
+                        }
                     }
                 }
             }
-            $this->command->info('✔ Sample survey created.');
+            $this->command->info('✔ 3 Sample surveys created.');
+        }
+
+        // 8. Create Sample Agenda
+        $this->command->newLine();
+        $this->command->comment('Step 8: Creating Sample Agenda...');
+        if ($adminUser) {
+            $agendas = [
+                [
+                    'title' => 'Rapat Koordinasi Evaluasi Kinerja Bulanan',
+                    'jenis_agenda' => 'Rapat Internal',
+                    'mode' => 'offline',
+                    'date' => now()->format('Y-m-d'),
+                    'start_time' => '08:30',
+                    'end_time' => '11:00',
+                    'location' => 'Ruang Rapat DISKOMINFO Lt. 3',
+                ],
+                [
+                    'title' => 'Rapat Teknis Pengembangan Smart City',
+                    'jenis_agenda' => 'Rapat Teknis',
+                    'mode' => 'online',
+                    'date' => now()->addDay()->format('Y-m-d'),
+                    'start_time' => '13:00',
+                    'end_time' => '15:30',
+                    'location' => 'Zoom Meeting',
+                ],
+                [
+                    'title' => 'Coffee Morning & Briefing Pagi',
+                    'jenis_agenda' => 'Briefing',
+                    'mode' => 'offline',
+                    'date' => now()->addDays(2)->format('Y-m-d'),
+                    'start_time' => '07:30',
+                    'end_time' => '09:00',
+                    'location' => 'Lobby Gedung Utama',
+                ],
+            ];
+
+            foreach ($agendas as $aData) {
+                $agenda = \App\Models\Agenda::create([
+                    'master_opd_id' => $adminUser->opd_master_id,
+                    'user_id' => $adminUser->id,
+                    'title' => $aData['title'],
+                    'jenis_agenda' => $aData['jenis_agenda'],
+                    'mode' => $aData['mode'],
+                    'date' => $aData['date'],
+                    'start_time' => $aData['start_time'],
+                    'end_time' => $aData['end_time'],
+                    'location' => $aData['location'],
+                    'content' => '<p>Deskripsi contoh untuk agenda ' . $aData['title'] . '.</p>',
+                    'catatan' => 'Catatan tambahan untuk agenda ini.',
+                    'status' => 'active',
+                    'visibility' => 'public',
+                    'wifi_name' => 'DISKOMINFO_GUEST',
+                    'password_wifi' => 'pekanbaru2026',
+                ]);
+
+                $agenda->sessions()->create([
+                    'session_name' => 'Sesi Utama',
+                    'session_type' => $aData['mode'] === 'online' ? 'online' : 'offline',
+                    'token' => \Illuminate\Support\Str::random(32),
+                    'qr_code_path' => 'qrcodes/sample-qr.png',
+                    'start_at' => \Carbon\Carbon::parse($aData['date'] . ' ' . $aData['start_time']),
+                    'end_at' => \Carbon\Carbon::parse($aData['date'] . ' ' . $aData['end_time']),
+                    'is_active' => true,
+                ]);
+            }
+
+            $this->command->info('✔ 3 Sample agendas created.');
+        }
+
+        // 9. Create Sample Event
+        $this->command->newLine();
+        $this->command->comment('Step 9: Creating Sample Event...');
+        if ($adminUser) {
+            $events = [
+                [
+                    'title' => 'Workshop Digitalisasi Pelayanan Publik',
+                    'jenis_event' => 'Workshop',
+                    'mode' => 'offline',
+                    'date' => now()->addDays(7)->format('Y-m-d'),
+                ],
+                [
+                    'title' => 'Sosialisasi Aplikasi Agenity',
+                    'jenis_event' => 'Sosialisasi',
+                    'mode' => 'online',
+                    'date' => now()->addDays(2)->format('Y-m-d'),
+                ],
+                [
+                    'title' => 'Seminar Keamanan Cyber 2026',
+                    'jenis_event' => 'Seminar',
+                    'mode' => 'offline',
+                    'date' => now()->addDays(14)->format('Y-m-d'),
+                ],
+            ];
+
+            foreach ($events as $eData) {
+                \App\Models\Event::create([
+                    'master_opd_id' => $adminUser->opd_master_id,
+                    'user_id' => $adminUser->id,
+                    'title' => $eData['title'],
+                    'jenis_event' => $eData['jenis_event'],
+                    'mode' => $eData['mode'],
+                    'date' => $eData['date'],
+                    'start_time' => '09:00',
+                    'end_time' => '12:00',
+                    'location' => $eData['mode'] === 'online' ? 'Zoom Meeting' : 'Aula Gedung Utama',
+                    'content' => '<p>Konten deskripsi untuk event ' . $eData['title'] . '.</p>',
+                    'catatan' => 'Harap hadir tepat waktu.',
+                    'status' => 'active',
+                ]);
+            }
+
+            $this->command->info('✔ 3 Sample events created.');
         }
 
         $this->command->newLine();

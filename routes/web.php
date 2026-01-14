@@ -6,6 +6,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OpdMasterController;
 use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\UploadController;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('welcome');
 Route::get('/agenda-detail/{agenda}', [LandingPageController::class, 'showAgenda'])->name('agenda.public_detail');
+Route::get('/event-detail/{event}', [LandingPageController::class, 'showEvent'])->name('event.public_detail');
 
 // Public Survey
 Route::get('/survey/{id}/fill', [LandingPageController::class, 'surveyDetail'])->name('survey.public_detail');
@@ -53,6 +55,15 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(fu
     Route::delete('/agenda/{agenda}', [AgendaController::class, 'destroy'])->name('agenda.destroy')->middleware([RequireLogin::class, 'permission:delete-agenda']);
     Route::get('/agenda/{agenda}/export', [AgendaController::class, 'export'])->name('agenda.export')->middleware([RequireLogin::class, 'permission:export-absensi']);
     Route::get('/agenda/{agenda}/absensi', [AgendaController::class, 'showAbsensi'])->name('agenda.absensi')->middleware([RequireLogin::class, 'permission:view-agenda']);
+
+    // Event Master
+    Route::get('/event', [EventController::class, 'index'])->name('event.index')->middleware([RequireLogin::class, 'permission:view-event']);
+    Route::get('/event/suggest', [EventController::class, 'suggest'])->name('event.suggest')->middleware([RequireLogin::class, 'permission:view-event']);
+    Route::get('/event/create', [EventController::class, 'create'])->name('event.create')->middleware([RequireLogin::class, 'permission:add-event']);
+    Route::post('/event', [EventController::class, 'store'])->name('event.store')->middleware([RequireLogin::class, 'permission:add-event']);
+    Route::get('/event/{event}/edit', [EventController::class, 'edit'])->name('event.edit')->middleware([RequireLogin::class, 'permission:edit-event']);
+    Route::put('/event/{event}', [EventController::class, 'update'])->name('event.update')->middleware([RequireLogin::class, 'permission:edit-event']);
+    Route::delete('/event/{event}', [EventController::class, 'destroy'])->name('event.destroy')->middleware([RequireLogin::class, 'permission:delete-event']);
 
     // Survey Master
     Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index')->middleware([RequireLogin::class, 'permission:view-survey']);

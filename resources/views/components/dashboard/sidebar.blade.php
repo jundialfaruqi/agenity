@@ -49,6 +49,20 @@
                     </li>
                 @endcan
 
+                @can('view-event')
+                    <li>
+                        <a wire:navigate href="{{ route('event.index') }}"
+                            class="{{ request()->routeIs('event.*') ? 'active bg-base-200 text-base-content font-medium' : '' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                            </svg>
+                            Event
+                        </a>
+                    </li>
+                @endcan
+
                 @can('view-survey')
                     <li>
                         <a wire:navigate href="{{ route('survey.index') }}"
@@ -145,8 +159,8 @@
                 </div>
                 <div class="dropdown dropdown-end dropdown-top">
                     <label tabindex="0" class="btn btn-ghost btn-xs btn-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                         </svg>
