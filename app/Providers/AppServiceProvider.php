@@ -9,6 +9,7 @@ use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 
 use App\Models\AppSetting;
+use App\Http\View\Composers\DashboardHeaderComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 
@@ -39,5 +40,8 @@ class AppServiceProvider extends ServiceProvider
                 View::share('appSetting', AppSetting::find(1));
             }
         }
+
+        // Dashboard Header Notifications
+        View::composer('components.dashboard.header', DashboardHeaderComposer::class);
     }
 }

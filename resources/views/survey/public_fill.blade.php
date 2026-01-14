@@ -4,12 +4,89 @@
     <div class="grow bg-base-200/50 py-12" x-data="{
         step: 1,
         agreed: false,
+        surveyId: '{{ $survey->id }}',
         formData: {
             name: '',
             phone: '',
             nik: '',
             occupation: '',
             age: ''
+        },
+        init() {
+            // Load saved data from localStorage
+            const savedData = localStorage.getItem('survey_draft_' + this.surveyId);
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    this.formData = { ...this.formData, ...parsed.formData };
+                    this.step = parsed.step || 1;
+                    this.agreed = parsed.agreed || false;
+    
+                    // Restore form answers after DOM is ready
+                    this.$nextTick(() => {
+                        if (parsed.answers) {
+                            Object.keys(parsed.answers).forEach(key => {
+                                const value = parsed.answers[key];
+                                const elements = document.getElementsByName(key);
+                                if (elements.length > 0) {
+                                    if (elements[0].type === 'radio' || elements[0].type === 'checkbox') {
+                                        elements.forEach(el => {
+                                            if (Array.isArray(value)) {
+                                                el.checked = value.includes(el.value);
+                                            } else {
+                                                el.checked = el.value == value;
+                                            }
+                                        });
+                                    } else {
+                                        elements[0].value = value;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading survey draft:', e);
+                }
+            }
+    
+            // Watch for changes to save data
+            this.$watch('formData', () => this.saveDraft(), { deep: true });
+            this.$watch('step', () => this.saveDraft());
+            this.$watch('agreed', () => this.saveDraft());
+    
+            // Listen for input changes in the form to save answers
+            document.getElementById('surveyForm')?.addEventListener('input', (e) => {
+                this.saveDraft();
+            });
+        },
+        saveDraft() {
+            const form = document.getElementById('surveyForm');
+            const answers = {};
+            if (form) {
+                const formDataObj = new FormData(form);
+                for (let [key, value] of formDataObj.entries()) {
+                    if (key.startsWith('answers[')) {
+                        if (key.endsWith('[]')) {
+                            if (!answers[key]) answers[key] = [];
+                            answers[key].push(value);
+                        } else {
+                            answers[key] = value;
+                        }
+                    }
+                }
+            }
+    
+            const dataToSave = {
+                formData: this.formData,
+                step: this.step,
+                agreed: this.agreed,
+                answers: answers,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('survey_draft_' + this.surveyId, JSON.stringify(dataToSave));
+        },
+        clearDraft() {
+            localStorage.removeItem('survey_draft_' + this.surveyId);
         }
     }">
         <div class="container mx-auto px-4 max-w-3xl">
@@ -149,7 +226,7 @@
                         </h2>
 
                         <form action="{{ route('survey.public_submit', $survey->id) }}" method="POST"
-                            class="space-y-10" id="surveyForm">
+                            class="space-y-10" id="surveyForm" @submit="clearDraft()">
                             @csrf
                             {{-- Hidden identity fields --}}
                             <input type="hidden" name="name" :value="formData.name">

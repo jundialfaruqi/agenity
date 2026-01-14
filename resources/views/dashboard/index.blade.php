@@ -5,7 +5,7 @@
         <div class="text-sm breadcrumbs text-base-content/60">
             <ul>
                 <li><a>{{ $appSetting->app_name ?? config('app.name') }}</a></li>
-                <li><a href="{{ route('dashboard.index') }}">Dashboards</a></li>
+                <li><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
             </ul>
         </div>
     </div>
@@ -514,8 +514,9 @@
 
             <!-- buttons that show up when FAB is open -->
             @can('add-agenda')
-                <a wire:navigate href="{{ route('agenda.create') }}" class="tooltip btn btn-circle btn-lg btn-primary shadow-md"
-                    id="fab-add-agenda" data-tip="Add Agenda">
+                <a wire:navigate href="{{ route('agenda.create') }}"
+                    class="tooltip btn btn-circle btn-lg btn-primary shadow-md" id="fab-add-agenda"
+                    data-tip="Add Agenda">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -525,8 +526,9 @@
             @endcan
 
             @can('add-event')
-                <a wire:navigate href="{{ route('event.create') }}" class="tooltip btn btn-circle btn-lg btn-secondary shadow-md"
-                    id="fab-add-event" data-tip="Add Event">
+                <a wire:navigate href="{{ route('event.create') }}"
+                    class="tooltip btn btn-circle btn-lg btn-secondary shadow-md" id="fab-add-event"
+                    data-tip="Add Event">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -536,8 +538,8 @@
             @endcan
 
             @can('add-survey')
-                <a wire:navigate href="{{ route('survey.create') }}" class="tooltip btn btn-circle btn-lg btn-accent shadow-md"
-                    id="fab-add-survey" data-tip="Add Survey">
+                <a wire:navigate href="{{ route('survey.create') }}"
+                    class="tooltip btn btn-circle btn-lg btn-accent shadow-md" id="fab-add-survey" data-tip="Add Survey">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
