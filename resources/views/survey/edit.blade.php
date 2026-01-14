@@ -17,7 +17,7 @@
         {{-- Kolom Kiri: Form Detail & Pertanyaan --}}
         <div class="lg:col-span-2 space-y-8">
             {{-- Detail Survei Card --}}
-            <div class="card bg-base-100 shadow-sm border border-base-200">
+            <div class="card bg-base-100 shadow border border-base-200">
                 <div class="card-body">
                     <h2 class="card-title text-lg mb-4">Detail Survei</h2>
                     <form action="{{ route('survey.update', $survey) }}" method="POST" class="space-y-6">
@@ -53,7 +53,7 @@
             </div>
 
             {{-- Pertanyaan Card --}}
-            <div class="card bg-base-100 shadow-sm border border-base-200">
+            <div class="card bg-base-100 shadow border border-base-200">
                 <div class="card-body">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="card-title text-lg">Daftar Pertanyaan</h2>
@@ -144,7 +144,7 @@
         {{-- Kolom Kanan: Pengaturan Sidebar --}}
         <div
             class="lg:col-span-1 space-y-6 lg:sticky lg:top-0 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2 custom-scrollbar">
-            <div class="card bg-base-100 shadow-sm border border-base-200">
+            <div class="card bg-base-100 shadow border border-base-200">
                 <div class="card-body p-6">
                     <h2 class="card-title text-sm uppercase tracking-widest opacity-60 mb-4">Pengaturan Publikasi</h2>
                     <form action="{{ route('survey.update', $survey) }}" method="POST" class="space-y-6">
@@ -220,7 +220,7 @@
             </div>
 
             {{-- Statistik Ringkas --}}
-            <div class="card bg-base-100 shadow-sm border border-base-200">
+            <div class="card bg-base-100 shadow border border-base-200">
                 <div class="card-body p-6">
                     <h2 class="card-title text-sm uppercase tracking-widest opacity-60 mb-4">Statistik</h2>
                     <div class="grid grid-cols-2 gap-4">
@@ -237,7 +237,7 @@
             </div>
 
             {{-- Link Survei --}}
-            <div class="card bg-base-100 shadow-sm border border-base-200">
+            <div class="card bg-base-100 mb-1 shadow border border-base-200">
                 <div class="card-body p-6">
                     <h2 class="card-title text-sm uppercase tracking-widest opacity-60 mb-4">Link Survei</h2>
                     @if ($survey->visibility === 'public')
