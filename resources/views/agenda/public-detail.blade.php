@@ -1,58 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $agenda->title }} - {{ $appSetting->app_name ?? config('app.name') }}</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-
-    <!-- Vite Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body {
-            font-family: 'Instrument Sans', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="bg-white min-h-screen flex flex-col">
-    <!-- Navbar -->
-    <div id="mainNavbar" class="navbar sticky top-0 z-50 px-4 lg:px-20 transition-all duration-300">
-        <div class="flex-1 text-secondary">
-            <a href="/" class="flex items-center gap-2">
-                @if ($appSetting && $appSetting->app_logo)
-                    <img src="{{ $appSetting->app_logo_url }}" class="w-10 h-10 object-contain" alt="Logo">
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10">
-                        <path fill-rule="evenodd"
-                            d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
-                            clip-rule="evenodd" />
-                    </svg>
-                @endif
-                <span class="text-xl font-bold tracking-tight">
-                    {{ $appSetting->app_name ?? config('app.name') }}
-                </span>
-            </a>
-        </div>
-        <div class="flex-none gap-2">
-            @auth
-                <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm rounded-lg">Dashboard</a>
-            @endauth
-            <a href="{{ route('welcome') }}" class="btn btn-ghost btn-sm gap-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                </svg>
-                Kembali
-            </a>
-        </div>
-    </div>
-
+<x-welcome-layout :title="$agenda->title">
     <main class="grow py-8 lg:py-12">
         <div class="container mx-auto px-4 lg:px-20">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -160,19 +106,16 @@
                                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
                                                                     stroke="currentColor" class="w-3 h-3">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                                 </svg>
                                                                 <svg id="pw-icon-hide"
                                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
                                                                     stroke="currentColor" class="w-3 h-3 hidden">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
                                                                 </svg>
                                                             </button>
@@ -182,8 +125,7 @@
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
                                                                     stroke="currentColor" class="w-3 h-3">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                                                                 </svg>
                                                             </button>
@@ -203,8 +145,7 @@
                                                     class="text-xs font-bold text-base-content/60 uppercase tracking-wider mb-1">
                                                     {{ $agenda->ket_link_lainnya ?? 'Link Tambahan' }}
                                                 </div>
-                                                <div id="link-display-text"
-                                                    class="font-mono text-sm break-all hidden">
+                                                <div id="link-display-text" class="font-mono text-sm break-all hidden">
                                                     {{ $agenda->link_lainnya }}
                                                 </div>
                                                 <div id="link-display-placeholder"
@@ -407,136 +348,74 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer
-        class="footer p-10 bg-neutral text-neutral-content lg:px-20 mt-12 flex flex-col md:flex-row justify-between gap-10">
-        <div class="max-w-xs">
-            <div class="flex items-center gap-2 mb-4">
-                <div class="text-primary-content">
-                    @if ($appSetting && $appSetting->app_logo)
-                        <img src="{{ $appSetting->app_logo_url }}" class="w-6 h-6 object-contain" alt="Logo">
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="w-10 h-10">
-                            <path fill-rule="evenodd"
-                                d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
-                                clip-rule="evenodd" />
+    @push('scripts')
+        <script>
+            function toggleWifiPass(btn) {
+                const passText = document.getElementById('wifi-pass-text');
+                const placeholder = document.getElementById('wifi-pass-placeholder');
+                const iconShow = document.getElementById('pw-icon-show');
+                const iconHide = document.getElementById('pw-icon-hide');
+
+                if (passText.style.display === 'none') {
+                    passText.style.display = 'inline';
+                    placeholder.style.display = 'none';
+                    iconShow.classList.add('hidden');
+                    iconHide.classList.remove('hidden');
+                } else {
+                    passText.style.display = 'none';
+                    placeholder.style.display = 'inline';
+                    iconShow.classList.remove('hidden');
+                    iconHide.classList.add('hidden');
+                }
+            }
+
+            function toggleLinkVisibility(btn) {
+                const linkText = document.getElementById('link-display-text');
+                const placeholder = document.getElementById('link-display-placeholder');
+                const iconShow = btn.querySelector('#icon-show');
+                const iconHide = btn.querySelector('#icon-hide');
+
+                if (linkText.classList.contains('hidden')) {
+                    linkText.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    iconShow.classList.add('hidden');
+                    iconHide.classList.remove('hidden');
+                } else {
+                    linkText.classList.add('hidden');
+                    placeholder.classList.remove('hidden');
+                    iconShow.classList.remove('hidden');
+                    iconHide.classList.add('hidden');
+                }
+            }
+
+            function copyToClipboard(text, btn) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalContent = btn.innerHTML;
+                    btn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-success">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
-                    @endif
-                </div>
-                <span class="text-2xl font-bold tracking-tight">
-                    {{ $appSetting->app_name ?? config('app.name') }}
-                </span>
-            </div>
-            <p>Agenity Digital Agenda Management.<br />Solusi cerdas untuk pengelolaan kegiatan dan absensi.</p>
-            <p class="text-xs opacity-50 mt-4">&copy; {{ date('Y') }} Agenity. All rights reserved.</p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-10 md:gap-20">
-            <div class="flex flex-col gap-2">
-                <span class="footer-title opacity-100 font-bold text-white mb-2">Layanan</span>
-                <a class="link link-hover">Agenda Publik</a>
-                <a class="link link-hover">Absensi Digital</a>
-                <a class="link link-hover">Pelaporan</a>
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="footer-title opacity-100 font-bold text-white mb-2">Organisasi</span>
-                <a class="link link-hover">Tentang Kami</a>
-                <a class="link link-hover">Kontak</a>
-                <a class="link link-hover">Panduan Pengguna</a>
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="footer-title opacity-100 font-bold text-white mb-2">Legal</span>
-                <a class="link link-hover">Ketentuan Layanan</a>
-                <a class="link link-hover">Kebijakan Privasi</a>
-                <a class="link link-hover">Kebijakan Cookie</a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        const navbar = document.getElementById("mainNavbar");
-
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 20) {
-                navbar.classList.add(
-                    "glass",
-                    "backdrop-blur-md"
-                );
-            } else {
-                navbar.classList.remove(
-                    "glass",
-                    "backdrop-blur-md"
-                );
+                    `;
+                    setTimeout(() => {
+                        btn.innerHTML = originalContent;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
             }
-        });
 
-        function toggleWifiPass(btn) {
-            const passText = document.getElementById('wifi-pass-text');
-            const placeholder = document.getElementById('wifi-pass-placeholder');
-            const iconShow = document.getElementById('pw-icon-show');
-            const iconHide = document.getElementById('pw-icon-hide');
+            function copyLink() {
+                const linkInput = document.getElementById('absensi_link');
+                linkInput.select();
+                linkInput.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(linkInput.value);
 
-            if (passText.style.display === 'none') {
-                passText.style.display = 'inline';
-                placeholder.style.display = 'none';
-                iconShow.classList.add('hidden');
-                iconHide.classList.remove('hidden');
-            } else {
-                passText.style.display = 'none';
-                placeholder.style.display = 'inline';
-                iconShow.classList.remove('hidden');
-                iconHide.classList.add('hidden');
-            }
-        }
-
-        function toggleLinkVisibility(btn) {
-            const linkText = document.getElementById('link-display-text');
-            const placeholder = document.getElementById('link-display-placeholder');
-            const iconShow = btn.querySelector('#icon-show');
-            const iconHide = btn.querySelector('#icon-hide');
-
-            if (linkText.classList.contains('hidden')) {
-                linkText.classList.remove('hidden');
-                placeholder.classList.add('hidden');
-                iconShow.classList.add('hidden');
-                iconHide.classList.remove('hidden');
-            } else {
-                linkText.classList.add('hidden');
-                placeholder.classList.remove('hidden');
-                iconShow.classList.remove('hidden');
-                iconHide.classList.add('hidden');
-            }
-        }
-
-        function copyToClipboard(text, btn) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalContent = btn.innerHTML;
-                btn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-success">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                    </svg>
-                `;
+                const successMsg = document.getElementById('copy_success');
+                successMsg.classList.remove('opacity-0');
                 setTimeout(() => {
-                    btn.innerHTML = originalContent;
+                    successMsg.classList.add('opacity-0');
                 }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        }
-
-        function copyLink() {
-            const linkInput = document.getElementById('absensi_link');
-            linkInput.select();
-            linkInput.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(linkInput.value);
-
-            const successMsg = document.getElementById('copy_success');
-            successMsg.classList.remove('opacity-0');
-            setTimeout(() => {
-                successMsg.classList.add('opacity-0');
-            }, 2000);
-        }
-    </script>
-</body>
-
-</html>
+            }
+        </script>
+    @endpush
+</x-welcome-layout>

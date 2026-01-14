@@ -1,50 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ ($title ?? 'Welcome') . ' - ' . ($appSetting->app_name ?? config('app.name')) }}</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-
-    <!-- Vite Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body {
-            font-family: 'Instrument Sans', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="bg-white min-h-screen flex flex-col">
-    <!-- Navbar -->
-    <div id="mainNavbar" class="navbar sticky top-0 z-50 px-4 lg:px-20
-            transition-all duration-300">
-        <div class="flex-1 text-secondary">
-            <a href="/" class="flex items-center gap-2">
-                @if ($appSetting && $appSetting->app_logo)
-                    <img src="{{ $appSetting->app_logo_url }}" class="w-10 h-10 object-contain" alt="Logo">
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10">
-                        <path fill-rule="evenodd"
-                            d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
-                            clip-rule="evenodd" />
-                    </svg>
-                @endif
-                <span class="text-xl font-bold tracking-tight">{{ $appSetting->app_name ?? config('app.name') }}</span>
-            </a>
-        </div>
-        <div class="flex-none gap-2">
-            @auth
-                <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm rounded-lg">Dashboard</a>
-            @endauth
-        </div>
-    </div>
-
+<x-welcome-layout>
     <main class="grow">
         <!-- Hero Section -->
         <div class="hero bg-base-100 py-16 lg:py-24">
@@ -170,8 +124,8 @@
                 @if ($agendas->isEmpty())
                     <div class="card bg-base-200 border-2 border-dashed border-base-300 py-20">
                         <div class="card-body items-center text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1" stroke="currentColor" class="w-16 h-16 text-base-content/20 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                                stroke="currentColor" class="w-16 h-16 text-base-content/20 mb-4">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                             </svg>
@@ -326,52 +280,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer
-        class="footer p-10 bg-neutral text-neutral-content lg:px-20 flex flex-col md:flex-row justify-between gap-10">
-        <div class="max-w-xs">
-            <div class="flex items-center gap-2 mb-4">
-                <div class="text-primary-content">
-                    @if ($appSetting && $appSetting->app_logo)
-                        <img src="{{ $appSetting->app_logo_url }}" class="w-6 h-6 object-contain" alt="Logo">
-                    @else
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="w-10 h-10">
-                            <path fill-rule="evenodd"
-                                d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    @endif
-                </div>
-                <span class="text-2xl font-bold tracking-tight">
-                    {{ $appSetting->app_name ?? config('app.name') }}
-                </span>
-            </div>
-            <p>Agenity Digital Agenda Management.<br />Solusi cerdas untuk pengelolaan kegiatan dan absensi.</p>
-            <p class="text-xs opacity-50 mt-4">&copy; {{ date('Y') }} Agenity. All rights reserved.</p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-10 md:gap-20">
-            <div class="flex flex-col gap-2">
-                <span class="footer-title opacity-100 font-bold text-white mb-2">Layanan</span>
-                <a class="link link-hover">Agenda Publik</a>
-                <a class="link link-hover">Absensi Digital</a>
-                <a class="link link-hover">Pelaporan</a>
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="footer-title opacity-100 font-bold text-white mb-2">Organisasi</span>
-                <a class="link link-hover">Tentang Kami</a>
-                <a class="link link-hover">Kontak</a>
-                <a class="link link-hover">Panduan Pengguna</a>
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="footer-title opacity-100 font-bold text-white mb-2">Legal</span>
-                <a class="link link-hover">Ketentuan Layanan</a>
-                <a class="link link-hover">Kebijakan Privasi</a>
-                <a class="link link-hover">Kebijakan Cookie</a>
-            </div>
-        </div>
-    </footer>
-
     <!-- QR Modal -->
     <dialog id="qr_modal" class="modal">
         <div class="modal-box text-center p-8 max-w-sm rounded-2xl">
@@ -419,45 +327,28 @@
             <button>close</button>
         </form>
     </dialog>
-
-    <script>
-        function showQrModal(title, qrImage, link) {
-            document.getElementById('modal_agenda_title').innerText = title;
-            document.getElementById('modal_qr_image').src = qrImage;
-            document.getElementById('modal_absensi_link').value = link;
-            document.getElementById('modal_visit_link').href = link;
-            document.getElementById('qr_modal').showModal();
-        }
-
-        function copyLink() {
-            const linkInput = document.getElementById('modal_absensi_link');
-            linkInput.select();
-            linkInput.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(linkInput.value);
-
-            const successMsg = document.getElementById('copy_success');
-            successMsg.classList.remove('opacity-0');
-            setTimeout(() => {
-                successMsg.classList.add('opacity-0');
-            }, 2000);
-        }
-
-        const navbar = document.getElementById("mainNavbar");
-
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 20) {
-                navbar.classList.add(
-                    "glass",
-                    "backdrop-blur-md"
-                );
-            } else {
-                navbar.classList.remove(
-                    "glass",
-                    "backdrop-blur-md"
-                );
+    @push('scripts')
+        <script>
+            function showQrModal(title, qrImage, link) {
+                document.getElementById('modal_agenda_title').innerText = title;
+                document.getElementById('modal_qr_image').src = qrImage;
+                document.getElementById('modal_absensi_link').value = link;
+                document.getElementById('modal_visit_link').href = link;
+                document.getElementById('qr_modal').showModal();
             }
-        });
-    </script>
-</body>
 
-</html>
+            function copyLink() {
+                const linkInput = document.getElementById('modal_absensi_link');
+                linkInput.select();
+                linkInput.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(linkInput.value);
+
+                const successMsg = document.getElementById('copy_success');
+                successMsg.classList.remove('opacity-0');
+                setTimeout(() => {
+                    successMsg.classList.add('opacity-0');
+                }, 2000);
+            }
+        </script>
+    @endpush
+</x-welcome-layout>
