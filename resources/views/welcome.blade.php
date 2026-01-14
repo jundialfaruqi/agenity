@@ -525,7 +525,7 @@
                                     <div class="mt-auto">
                                         <div class="flex items-center gap-2 mb-4">
                                             <div
-                                                class="w-6 h-6 rounded-full bg-base-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                                class="w-6 h-6 rounded-full bg-base-200 flex items-center justify-center overflow-hidden shrink-0">
                                                 @if ($event->opdMaster->logo_url)
                                                     <img src="{{ $event->opdMaster->logo_url }}"
                                                         alt="{{ $event->opdMaster->name }}"
