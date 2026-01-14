@@ -278,6 +278,113 @@
                 @endif
             </div>
         </div>
+
+        <!-- Surveys Section -->
+        <div id="surveys" class="pb-24 bg-base-200/30">
+            <div class="container mx-auto px-4 lg:px-20 pt-20">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight mb-2">Survei Masyarakat</h2>
+                    <p class="text-base-content/60">Bantu kami meningkatkan layanan dengan memberikan feedback Anda
+                        melalui survei di bawah ini.</p>
+                </div>
+
+                @if ($surveys->isEmpty())
+                    <div
+                        class="card bg-base-100 border-2 border-dashed border-base-300 py-16 text-base-content/20 mb-4">
+                        <div class="card-body items-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1" stroke="currentColor" class="size-16">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                            </svg>
+                            <h3 class="text-xl font-bold text-base-content/40">Belum ada survei aktif</h3>
+                            <p class="text-base-content/40">Terima kasih atas partisipasi Anda.</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        @foreach ($surveys as $survey)
+                            <div
+                                class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group flex flex-col h-full">
+                                <div class="card-body p-6 flex flex-col grow">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div
+                                            class="badge badge-primary badge-outline badge-sm text-[10px] uppercase font-bold">
+                                            {{ $survey->opd->singkatan }}</div>
+                                        <div class="text-[10px] text-base-content/50 font-medium">Berakhir:
+                                            {{ $survey->end_date->format('d/m/Y') }}</div>
+                                    </div>
+                                    <h2
+                                        class="card-title text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2 min-h-14">
+                                        {{ $survey->title }}
+                                    </h2>
+                                    <p class="text-sm text-base-content/60 line-clamp-3 mb-4 grow">
+                                        {{ $survey->description ?? 'Tidak ada deskripsi tambahan.' }}
+                                    </p>
+
+                                    {{-- Respondent Progress --}}
+                                    <div class="mb-6">
+                                        @if ($survey->max_respondents)
+                                            <div class="flex justify-between items-end mb-2">
+                                                <div
+                                                    class="text-[11px] font-bold text-base-content/70 uppercase tracking-wider">
+                                                    Progres Responden</div>
+                                                <div class="text-xs font-black text-primary">
+                                                    {{ $survey->respondents_count }}
+                                                    <span class="text-base-content/40 font-normal">/
+                                                        {{ $survey->max_respondents }}</span>
+                                                </div>
+                                            </div>
+                                            <progress class="progress progress-primary w-full h-2"
+                                                value="{{ $survey->respondents_count }}"
+                                                max="{{ $survey->max_respondents }}"></progress>
+                                            <div class="flex justify-between mt-1.5">
+                                                <div class="text-[10px] text-base-content/50 italic font-medium">
+                                                    {{ round(($survey->respondents_count / $survey->max_respondents) * 100) }}%
+                                                    Terisi
+                                                </div>
+                                                @if ($survey->respondents_count >= $survey->max_respondents)
+                                                    <div
+                                                        class="text-[10px] text-error font-bold uppercase tracking-tighter">
+                                                        Kuota Penuh</div>
+                                                @else
+                                                    <div
+                                                        class="text-[10px] text-success font-bold uppercase tracking-tighter">
+                                                        Tersedia</div>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div class="flex justify-between items-end mb-2">
+                                                <div
+                                                    class="text-[11px] font-bold text-base-content/70 uppercase tracking-wider">
+                                                    Total Responden</div>
+                                                <div class="text-xs font-black text-primary">
+                                                    {{ $survey->respondents_count }}</div>
+                                            </div>
+                                            <div class="h-2 w-full bg-base-200 rounded-full overflow-hidden">
+                                                <div class="h-full bg-primary/20 w-full animate-pulse"></div>
+                                            </div>
+                                            <div class="text-[10px] text-base-content/50 mt-1.5 italic font-medium">
+                                                Tanpa
+                                                batasan kuota</div>
+                                        @endif
+                                    </div>
+                                    <div class="card-actions mt-auto pt-4 border-t border-base-200">
+                                        @if ($survey->max_respondents && $survey->respondents_count >= $survey->max_respondents)
+                                            <button class="btn btn-disabled btn-sm btn-block rounded-lg" disabled>Kuota
+                                                Penuh</button>
+                                        @else
+                                            <a href="{{ route('survey.public_detail', $survey->id) }}"
+                                                class="btn btn-primary btn-sm btn-block rounded-lg">Ikuti Survei</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
     </main>
 
     <!-- QR Modal -->

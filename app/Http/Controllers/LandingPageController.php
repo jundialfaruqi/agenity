@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Survey;
+use App\Models\SurveyToken;
 use App\Services\AgendaService;
+use App\Services\SurveyService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LandingPageController extends Controller
 {
-    public function index(Request $request, AgendaService $service)
+    public function index(Request $request, AgendaService $service, SurveyService $surveyService)
     {
         $stats = $service->getStats();
 
@@ -101,7 +105,18 @@ class LandingPageController extends Controller
             return $agenda;
         });
 
-        return view('welcome', compact('stats', 'agendas', 'currentFilter'));
+        // Fetch Public Surveys
+        $surveys = Survey::where('visibility', 'public')
+            ->where('is_active', true)
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->with(['opd'])
+            ->withCount('respondents')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        return view('welcome', compact('stats', 'agendas', 'currentFilter', 'surveys'));
     }
 
     public function showAgenda(Agenda $agenda)
@@ -112,5 +127,138 @@ class LandingPageController extends Controller
 
         $agenda->load(['opdMaster', 'sessions', 'user']);
         return view('agenda.public-detail', compact('agenda'));
+    }
+
+    public function surveyDetail($id, Request $request)
+    {
+        $survey = Survey::with(['questions.options', 'opd'])->findOrFail($id);
+
+        if ($survey->visibility === 'private') {
+            return redirect()->route('welcome')->with('error', 'Survei ini bersifat privat.');
+        }
+
+        return $this->renderSurvey($survey, $request);
+    }
+
+    public function surveyByToken($token, Request $request)
+    {
+        $surveyToken = SurveyToken::where('token', $token)->firstOrFail();
+        $survey = Survey::with(['questions.options', 'opd'])->findOrFail($surveyToken->survey_id);
+
+        return $this->renderSurvey($survey, $request);
+    }
+
+    protected function renderSurvey(Survey $survey, Request $request)
+    {
+        // Check if survey is active and within date range
+        $today = now();
+        if (!$survey->is_active || $survey->start_date > $today || $survey->end_date < $today) {
+            return redirect()->route('welcome')->with('error', 'Survei ini tidak sedang aktif.');
+        }
+
+        // Anti-duplication check: IP Address (Already filled check)
+        $existingRespondent = $survey->respondents()
+            ->where('ip_address', $request->ip())
+            ->where('created_at', '>=', now()->subDay())
+            ->first();
+
+        if ($existingRespondent) {
+            return view('survey.public_already_filled', compact('survey'));
+        }
+
+        // Check respondent quota
+        if ($survey->max_respondents && $survey->respondents()->count() >= $survey->max_respondents) {
+            return view('survey.public_quota_full', compact('survey'));
+        }
+
+        return view('survey.public_fill', compact('survey'));
+    }
+
+    public function surveySubmit(Request $request, $id)
+    {
+        $survey = Survey::with('questions')->findOrFail($id);
+
+        // Check respondent quota before processing
+        if ($survey->max_respondents && $survey->respondents()->count() >= $survey->max_respondents) {
+            return view('survey.public_quota_full', compact('survey'));
+        }
+
+        // Anti-duplication check: IP Address
+        $existingRespondent = $survey->respondents()
+            ->where('ip_address', $request->ip())
+            ->where('created_at', '>=', now()->subDay()) // Limit to once per 24 hours per IP
+            ->first();
+
+        if ($existingRespondent) {
+            return view('survey.public_already_filled', compact('survey'));
+        }
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'nik' => 'nullable|string|max:16',
+            'occupation' => 'nullable|string|max:255',
+            'age' => 'nullable|integer|min:1|max:120',
+        ];
+
+        foreach ($survey->questions as $question) {
+            if ($question->is_required) {
+                $rules['answers.' . $question->id] = 'required';
+            }
+        }
+
+        $validated = $request->validate($rules);
+
+        try {
+            DB::transaction(function () use ($request, $survey, $validated) {
+                $respondent = $survey->respondents()->create([
+                    'name' => $validated['name'],
+                    'phone' => $validated['phone'],
+                    'nik' => $validated['nik'] ?? null,
+                    'occupation' => $validated['occupation'] ?? null,
+                    'age' => $validated['age'] ?? null,
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'submitted_at' => now(),
+                ]);
+
+                if ($request->has('answers')) {
+                    foreach ($request->answers as $questionId => $answer) {
+                        $question = $survey->questions()->find($questionId);
+                        if (!$question) continue;
+
+                        $answerData = [
+                            'question_id' => $questionId,
+                        ];
+
+                        if (in_array($question->type, ['single_choice', 'rating'])) {
+                            if ($question->type === 'single_choice') {
+                                $answerData['option_id'] = $answer;
+                            } else {
+                                $answerData['answer_text'] = $answer;
+                            }
+                        } elseif ($question->type === 'multiple_choice') {
+                            if (is_array($answer)) {
+                                foreach ($answer as $optionId) {
+                                    $respondent->answers()->create([
+                                        'question_id' => $questionId,
+                                        'option_id' => $optionId,
+                                    ]);
+                                }
+                                continue;
+                            }
+                        } else {
+                            $answerData['answer_text'] = $answer;
+                        }
+
+                        $respondent->answers()->create($answerData);
+                    }
+                }
+            });
+
+            return view('survey.public_success', compact('survey'));
+        } catch (\Throwable $e) {
+            return back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

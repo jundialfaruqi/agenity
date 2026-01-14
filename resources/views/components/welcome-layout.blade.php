@@ -12,10 +12,15 @@
 
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 
     <style>
         body {
             font-family: 'Instrument Sans', sans-serif;
+        }
+
+        [x-cloak] {
+            display: none !important;
         }
     </style>
     @stack('styles')
@@ -49,6 +54,7 @@
             }
         });
     </script>
+    @livewireScripts
     @stack('scripts')
 </body>
 

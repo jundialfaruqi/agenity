@@ -114,6 +114,13 @@ class DatabaseSeeder extends Seeder
                 'view-absensi',
                 'export-absensi',
             ],
+            'survey' => [
+                'view-survey',
+                'add-survey',
+                'edit-survey',
+                'delete-survey',
+                'view-survey-result',
+            ],
         ];
 
         foreach ($permissions as $group => $permissionList) {
@@ -166,10 +173,10 @@ class DatabaseSeeder extends Seeder
         $userExampleRole->syncPermissions($examplePermissions);
         $this->command->info('✔ Example permissions synced to User Example Role.');
 
-        // Sync agenda permissions to Admin OPD Role
-        $agendaPermissions = Permission::where('group', 'agenda')->get();
-        $adminOpdRole->syncPermissions($agendaPermissions);
-        $this->command->info('✔ Agenda permissions synced to Admin OPD Role.');
+        // Sync agenda & survey permissions to Admin OPD Role
+        $adminOpdPermissions = Permission::whereIn('group', ['agenda', 'survey'])->get();
+        $adminOpdRole->syncPermissions($adminOpdPermissions);
+        $this->command->info('✔ Agenda & Survey permissions synced to Admin OPD Role.');
 
         // 4. Create OPD Masters
         $this->command->newLine();
@@ -301,11 +308,8 @@ class DatabaseSeeder extends Seeder
 
         $this->command->table(['Name', 'Email', 'Password', 'Role', 'Status'], $displayUsers);
 
-        $this->command->newLine();
-        $this->command->info('✨ Database Seeding Completed Successfully! ✨');
-        $this->command->newLine();
-
         // 6. Initialize App Settings
+        $this->command->newLine();
         $this->command->comment('Step 6: Initializing App Settings...');
         AppSetting::updateOrCreate(
             ['id' => 1],
@@ -316,5 +320,65 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $this->command->info('✔ App settings initialized.');
+
+        // 7. Create Sample Survey
+        $this->command->newLine();
+        $this->command->comment('Step 7: Creating Sample Survey...');
+        $adminUser = User::where('email', 'adminopd@mail.com')->first();
+        if ($adminUser) {
+            $survey = \App\Models\Survey::create([
+                'opd_id' => $adminUser->opd_master_id,
+                'created_by' => $adminUser->id,
+                'title' => 'Survei Kepuasan Masyarakat 2026',
+                'description' => 'Kami ingin mendengar pendapat Anda mengenai layanan kami.',
+                'start_date' => now(),
+                'end_date' => now()->addMonth(),
+                'is_active' => true,
+                'visibility' => 'public',
+            ]);
+
+            $questions = [
+                [
+                    'question_text' => 'Bagaimana penilaian Anda terhadap kecepatan layanan kami?',
+                    'type' => 'rating',
+                    'is_required' => true,
+                ],
+                [
+                    'question_text' => 'Fasilitas apa yang menurut Anda perlu ditingkatkan?',
+                    'type' => 'multiple_choice',
+                    'is_required' => true,
+                    'options' => ['Ruang Tunggu', 'Kebersihan', 'Parkir', 'Sistem Antrean'],
+                ],
+                [
+                    'question_text' => 'Apakah petugas kami melayani dengan ramah?',
+                    'type' => 'single_choice',
+                    'is_required' => true,
+                    'options' => ['Ya, sangat ramah', 'Cukup ramah', 'Tidak ramah'],
+                ],
+                [
+                    'question_text' => 'Berikan saran atau masukan Anda untuk kami.',
+                    'type' => 'text',
+                    'is_required' => false,
+                ],
+            ];
+
+            foreach ($questions as $q) {
+                $question = $survey->questions()->create([
+                    'question_text' => $q['question_text'],
+                    'type' => $q['type'],
+                    'is_required' => $q['is_required'],
+                ]);
+
+                if (isset($q['options'])) {
+                    foreach ($q['options'] as $optionText) {
+                        $question->options()->create(['option_text' => $optionText]);
+                    }
+                }
+            }
+            $this->command->info('✔ Sample survey created.');
+        }
+
+        $this->command->newLine();
+        $this->command->info('✨ Database Seeding Completed Successfully! ✨');
     }
 }
