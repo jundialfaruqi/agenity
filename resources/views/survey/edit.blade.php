@@ -92,7 +92,8 @@
                                     </div>
                                     <div
                                         class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="btn btn-square btn-xs text-primary">
+                                        <button type="button" class="btn btn-square btn-xs text-primary"
+                                            onclick="openEditQuestionModal({{ json_encode($question) }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -315,8 +316,9 @@
                         </select>
                     </div>
                     <div class="flex items-end pb-3">
-                        <label class="label cursor-pointer justify-start gap-4">
-                            <input type="checkbox" name="is_required" class="checkbox checkbox-primary" checked />
+                        <label class="label text-xs cursor-pointer justify-start gap-4">
+                            <input type="checkbox" name="is_required" class="checkbox checkbox-xs checkbox-secondary"
+                                checked />
                             <span class="label-text font-bold">Wajib Diisi</span>
                         </label>
                     </div>
@@ -355,6 +357,64 @@
         </div>
     </dialog>
 
+    {{-- Modal Edit Pertanyaan --}}
+    <dialog id="edit_question_modal" class="modal">
+        <div class="modal-box max-w-2xl">
+            <h3 class="font-bold text-lg mb-4">Edit Pertanyaan</h3>
+            <form action="" method="POST" id="edit_question_form" class="space-y-4">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="survey_id" value="{{ $survey->id }}">
+
+                <div>
+                    <label class="label"><span class="label-text font-bold mb-2">Teks Pertanyaan</span></label>
+                    <textarea name="question_text" id="edit_question_text" class="textarea textarea-bordered w-full h-24"
+                        placeholder="Contoh: Bagaimana pendapat Anda tentang layanan kami?" required></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="label"><span class="label-text font-bold mb-2">Tipe Pertanyaan</span></label>
+                        <select name="type" class="select select-bordered w-full" id="edit_question_type"
+                            required>
+                            <option value="text">Teks Jawaban Pendek</option>
+                            <option value="single_choice">Pilihan Tunggal (Radio)</option>
+                            <option value="multiple_choice">Pilihan Ganda (Checkbox)</option>
+                            <option value="rating">Rating (1-5)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end pb-3">
+                        <label class="label text-xs cursor-pointer justify-start gap-4">
+                            <input type="checkbox" name="is_required" id="edit_is_required"
+                                class="checkbox checkbox-xs checkbox-secondary" />
+                            <span class="label-text font-bold">Wajib Diisi</span>
+                        </label>
+                    </div>
+                </div>
+
+                {{-- Container for Options --}}
+                <div id="edit_options_container" class="hidden space-y-3 p-4 bg-base-200 rounded-xl">
+                    <label class="label pt-0"><span class="label-text font-bold">Pilihan Jawaban</span></label>
+                    <div id="edit_options_list" class="space-y-2">
+                        {{-- Options will be populated by JS --}}
+                    </div>
+                    <button type="button" id="edit_add_option_btn" class="btn btn-xs btn-ghost gap-2 text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Tambah Pilihan
+                    </button>
+                </div>
+
+                <div class="modal-action">
+                    <button type="button" onclick="edit_question_modal.close()" class="btn btn-base">Batal</button>
+                    <button type="submit" class="btn btn-secondary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
     @push('scripts')
         <script>
             function copyToClipboard(elementId) {
@@ -381,12 +441,67 @@
                 });
             }
 
+            function openEditQuestionModal(question) {
+                const form = document.getElementById('edit_question_form');
+                const questionText = document.getElementById('edit_question_text');
+                const questionType = document.getElementById('edit_question_type');
+                const isRequired = document.getElementById('edit_is_required');
+                const optionsContainer = document.getElementById('edit_options_container');
+                const optionsList = document.getElementById('edit_options_list');
+
+                // Set action URL (adjust based on your routes)
+                form.action = `/survey/questions/${question.id}`;
+
+                // Set basic fields
+                questionText.value = question.question_text;
+                questionType.value = question.type;
+                isRequired.checked = !!question.is_required;
+
+                // Handle options
+                optionsList.innerHTML = '';
+                if (question.type === 'single_choice' || question.type === 'multiple_choice') {
+                    optionsContainer.classList.remove('hidden');
+                    if (question.options && question.options.length > 0) {
+                        question.options.forEach(option => {
+                            addOptionToEditList(option.option_text);
+                        });
+                    } else {
+                        addOptionToEditList('');
+                    }
+                } else {
+                    optionsContainer.classList.add('hidden');
+                }
+
+                edit_question_modal.showModal();
+            }
+
+            function addOptionToEditList(value = '') {
+                const optionsList = document.getElementById('edit_options_list');
+                const div = document.createElement('div');
+                div.className = 'flex gap-2';
+                div.innerHTML = `
+                    <input type="text" name="options[]" class="input input-bordered input-sm flex-1" placeholder="Pilihan" value="${value}">
+                    <button type="button" class="btn btn-sm btn-square btn-ghost text-error remove-option">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </button>
+                `;
+                optionsList.appendChild(div);
+            }
+
             document.addEventListener('DOMContentLoaded', function() {
                 const questionType = document.getElementById('question_type');
                 const optionsContainer = document.getElementById('options_container');
                 const addOptionBtn = document.getElementById('add_option_btn');
                 const optionsList = document.getElementById('options_list');
 
+                const editQuestionType = document.getElementById('edit_question_type');
+                const editOptionsContainer = document.getElementById('edit_options_container');
+                const editAddOptionBtn = document.getElementById('edit_add_option_btn');
+                const editOptionsList = document.getElementById('edit_options_list');
+
+                // Add Question Logic
                 questionType.addEventListener('change', function() {
                     if (this.value === 'single_choice' || this.value === 'multiple_choice') {
                         optionsContainer.classList.remove('hidden');
@@ -402,7 +517,7 @@
                         <input type="text" name="options[]" class="input input-bordered input-sm flex-1" placeholder="Pilihan Baru">
                         <button type="button" class="btn btn-sm btn-square btn-ghost text-error remove-option">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.34 6m-4.74 6 4.74-6m4.74 6-4.74-6m4.74 6-4.74-6" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                             </svg>
                         </button>
                     `;
@@ -410,6 +525,28 @@
                 });
 
                 optionsList.addEventListener('click', function(e) {
+                    if (e.target.closest('.remove-option')) {
+                        e.target.closest('.flex').remove();
+                    }
+                });
+
+                // Edit Question Logic
+                editQuestionType.addEventListener('change', function() {
+                    if (this.value === 'single_choice' || this.value === 'multiple_choice') {
+                        editOptionsContainer.classList.remove('hidden');
+                        if (editOptionsList.children.length === 0) {
+                            addOptionToEditList('');
+                        }
+                    } else {
+                        editOptionsContainer.classList.add('hidden');
+                    }
+                });
+
+                editAddOptionBtn.addEventListener('click', function() {
+                    addOptionToEditList('');
+                });
+
+                editOptionsList.addEventListener('click', function(e) {
                     if (e.target.closest('.remove-option')) {
                         e.target.closest('.flex').remove();
                     }
