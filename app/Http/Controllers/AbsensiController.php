@@ -61,7 +61,7 @@ class AbsensiController extends Controller
             'nip_nik' => 'nullable|string|max:255',
             'handphone' => 'required|string|max:20',
             'asal_daerah' => 'required|in:dalam_kota,luar_kota',
-            'master_opd_id' => 'nullable|exists:opd_masters,id',
+            'master_opd_id' => 'nullable',
             'asal_instansi' => 'required|string|max:255',
             'jabatan_pekerjaan' => 'required|string|max:255',
             'ttd' => 'required|string', // Base64 signature
@@ -72,7 +72,6 @@ class AbsensiController extends Controller
             'handphone.max' => 'Nomor HP maksimal 20 karakter.',
             'asal_daerah.required' => 'Asal daerah wajib dipilih.',
             'asal_daerah.in' => 'Pilihan asal daerah tidak valid.',
-            'master_opd_id.exists' => 'OPD yang dipilih tidak valid.',
             'asal_instansi.required' => 'Asal instansi wajib diisi.',
             'jabatan_pekerjaan.required' => 'Jabatan/Pekerjaan wajib diisi.',
             'ttd.required' => 'Tanda tangan wajib diisi.',
@@ -87,7 +86,7 @@ class AbsensiController extends Controller
             $absensi->nip_nik = $validated['nip_nik'];
             $absensi->handphone = $validated['handphone'];
             $absensi->asal_daerah = $validated['asal_daerah'];
-            $absensi->master_opd_id = $validated['master_opd_id'];
+            $absensi->master_opd_id = is_numeric($validated['master_opd_id']) ? $validated['master_opd_id'] : null;
             $absensi->asal_instansi = $validated['asal_instansi'];
             $absensi->jabatan_pekerjaan = $validated['jabatan_pekerjaan'];
             $absensi->ttd_path = $validated['ttd']; // Storing base64 for simplicity in this MVP

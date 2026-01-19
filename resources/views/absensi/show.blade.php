@@ -135,7 +135,7 @@
                                 <select name="master_opd_id" id="master_opd_id" class="select select-bordered w-full"
                                     x-show="isOpd">
                                     <option value="">-- Pilih OPD --</option>
-                                    <option value="lainnya">Lainnya / Instansi Luar</option>
+                                    <option value="lainnya" @selected(old('master_opd_id') == 'lainnya')>Lainnya / Instansi Luar</option>
                                     @foreach ($opds as $opd)
                                         <option value="{{ $opd->id }}" data-name="{{ $opd->name }}"
                                             @selected(old('master_opd_id', Auth::user()->opd_master_id ?? '') == $opd->id)>
@@ -156,6 +156,9 @@
 
                             </div>
                             @error('asal_instansi')
+                                <span class="text-xs text-error mt-1">{{ $message }}</span>
+                            @enderror
+                            @error('master_opd_id')
                                 <span class="text-xs text-error mt-1">{{ $message }}</span>
                             @enderror
                         </div>

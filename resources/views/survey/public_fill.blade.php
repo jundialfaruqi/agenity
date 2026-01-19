@@ -219,7 +219,7 @@
                             Isi Kuesioner Survei
                         </h2>
 
-                        <form action="{{ route('survey.public_submit', $survey->id) }}" method="POST"
+                        <form action="{{ route('survey.public_submit', $survey->slug) }}" method="POST"
                             class="space-y-10" id="surveyForm" @submit="clearDraft()">
                             @csrf
                             {{-- Hidden identity fields --}}

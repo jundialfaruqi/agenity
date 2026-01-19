@@ -189,7 +189,7 @@ class SurveyService
             ->get()
             ->map(function ($survey) {
                 return [
-                    'id' => $survey->id,
+                    'id' => $survey->uuid,
                     'title' => $survey->title,
                     'opd' => $survey->opd->name ?? 'N/A',
                     'visibility' => $survey->visibility,

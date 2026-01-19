@@ -308,6 +308,29 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="flex justify-center gap-2">
+                                        <a href="{{ route('agenda.public_detail', $agenda->slug) }}" target="_blank"
+                                            class="btn btn-square btn-ghost btn-xs text-info tooltip"
+                                            data-tip="Lihat Detail">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+                                        </a>
+                                        <button type="button"
+                                            class="btn btn-square btn-ghost btn-xs text-secondary tooltip"
+                                            data-tip="Copy Public Link"
+                                            onclick="copyText('{{ route('agenda.public_detail', $agenda->slug) }}', this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                            </svg>
+                                        </button>
                                         @if ($agenda->sessions->count() > 0)
                                             <button type="button"
                                                 class="btn btn-square btn-ghost btn-xs text-warning" title="View QR"
@@ -322,7 +345,7 @@
                                                 </svg>
                                             </button>
                                         @endif
-                                        <a href="{{ route('agenda.absensi', $agenda->id) }}"
+                                        <a href="{{ route('agenda.absensi', $agenda->uuid) }}"
                                             class="btn btn-square btn-ghost btn-xs text-primary"
                                             title="View Attendance">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -332,7 +355,7 @@
                                                     d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                                             </svg>
                                         </a>
-                                        <a href="{{ route('agenda.export', $agenda->id) }}"
+                                        <a href="{{ route('agenda.export', $agenda->uuid) }}"
                                             class="btn btn-square btn-ghost btn-xs text-secondary" title="Export PDF">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -341,7 +364,7 @@
                                                     d="m9 13.5 3 3m0 0 3-3m-3 3v-6m1.06-4.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
                                             </svg>
                                         </a>
-                                        <a href="{{ route('agenda.edit', $agenda->id) }}"
+                                        <a href="{{ route('agenda.edit', $agenda->uuid) }}"
                                             class="btn btn-square btn-ghost btn-xs" title="Edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -351,7 +374,7 @@
                                             </svg>
                                         </a>
                                         <button type="button" class="btn btn-square btn-ghost btn-xs text-error"
-                                            title="Delete" data-delete-id="{{ $agenda->id }}"
+                                            title="Delete" data-delete-id="{{ $agenda->uuid }}"
                                             data-delete-title="{{ $agenda->title }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -399,9 +422,18 @@
                     <div class="text-xs opacity-50 uppercase font-bold">Public Link:</div>
                     <div class="flex gap-2">
                         <input type="text" id="qr_modal_link" readonly
-                            class="input input-bordered input-sm flex-1 text-xs">
-                        <button onclick="copyQrLink()" class="btn btn-sm btn-neutral">Copy</button>
+                            class="input input-bordered input-sm flex-1 text-xs focus:outline-none">
+                        <button onclick="copyQrLink()" class="btn btn-sm btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 1.927-.184" />
+                            </svg>
+                        </button>
                     </div>
+                    <div id="qr_copy_success"
+                        class="text-[10px] text-success font-bold mt-1 opacity-0 transition-opacity text-center">
+                        Link berhasil disalin!</div>
                 </div>
             </div>
             <div class="modal-action">
@@ -437,6 +469,43 @@
 
     @push('scripts')
         <script>
+            function copyText(text, btn) {
+                if (!navigator.clipboard) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(btn);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+
+            function showCopySuccess(btn) {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                `;
+                btn.classList.add('text-success');
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('text-success');
+                }, 2000);
+            }
+
             (function() {
                 const input = document.getElementById('agenda-search-input');
                 const box = document.getElementById('agenda-search-suggestions');
@@ -551,7 +620,7 @@
                     btn.addEventListener('click', function() {
                         const id = this.getAttribute('data-delete-id');
                         const title = this.getAttribute('data-delete-title') || '';
-                        deleteForm.setAttribute('action', `{{ url('/agenda') }}/${id}`);
+                        deleteForm.setAttribute('action', `{{ url('/agenda/delete') }}/${id}`);
                         deleteTitleEl.textContent = title;
                         if (deleteModal?.showModal) deleteModal.showModal();
                     });
@@ -567,9 +636,37 @@
 
             function copyQrLink() {
                 const linkInput = document.getElementById('qr_modal_link');
-                linkInput.select();
-                document.execCommand('copy');
-                alert('Link berhasil disalin!');
+                const textToCopy = linkInput.value;
+
+                if (!navigator.clipboard) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showQrCopySuccess();
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showQrCopySuccess();
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+
+            function showQrCopySuccess() {
+                const successMsg = document.getElementById('qr_copy_success');
+                successMsg.classList.remove('opacity-0');
+                setTimeout(() => {
+                    successMsg.classList.add('opacity-0');
+                }, 2000);
             }
 
             document.addEventListener('DOMContentLoaded', function() {

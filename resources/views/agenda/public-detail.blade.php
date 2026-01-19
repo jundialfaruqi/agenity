@@ -389,27 +389,71 @@
             }
 
             function copyToClipboard(text, btn) {
+                if (!navigator.clipboard) {
+                    // Fallback for non-HTTPS
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(btn);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+
                 navigator.clipboard.writeText(text).then(() => {
-                    const originalContent = btn.innerHTML;
-                    btn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-success">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                        </svg>
-                    `;
-                    setTimeout(() => {
-                        btn.innerHTML = originalContent;
-                    }, 2000);
+                    showCopySuccess(btn);
                 }).catch(err => {
-                    console.error('Failed to copy: ', err);
+                    console.error('Async: Could not copy text: ', err);
                 });
+            }
+
+            function showCopySuccess(btn) {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-success">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                `;
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                }, 2000);
             }
 
             function copyLink() {
                 const linkInput = document.getElementById('absensi_link');
-                linkInput.select();
-                linkInput.setSelectionRange(0, 99999);
-                navigator.clipboard.writeText(linkInput.value);
+                const textToCopy = linkInput.value;
 
+                if (!navigator.clipboard) {
+                    // Fallback for non-HTTPS
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showLinkSuccess();
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showLinkSuccess();
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+
+            function showLinkSuccess() {
                 const successMsg = document.getElementById('copy_success');
                 successMsg.classList.remove('opacity-0');
                 setTimeout(() => {

@@ -246,7 +246,7 @@
                             <div class="text-xs text-base-content/60 italic">Survei ini bersifat publik dan dapat
                                 diakses melalui link berikut:</div>
                             <div class="join w-full">
-                                <input type="text" value="{{ route('survey.public_detail', $survey->id) }}"
+                                <input type="text" value="{{ route('survey.public_detail', $survey->slug) }}"
                                     class="input input-bordered input-sm join-item flex-1 bg-base-200" readonly
                                     id="public_link">
                                 <button class="btn btn-sm btn-secondary join-item"

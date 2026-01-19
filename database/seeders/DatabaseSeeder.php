@@ -17,8 +17,6 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
@@ -27,8 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->command->newLine();
         $this->command->info('🚀 Starting Database Seeding...');
         $this->command->newLine();
-
-        // 0. Pre-seeding checks and cleanup
         $this->command->comment('Step 0: Pre-seeding Cleanup & Checks...');
 
         // Check Storage Link

@@ -17,7 +17,7 @@
                 </button>
             @elseif($survey->visibility === 'public')
                 <button class="btn btn-secondary btn-sm gap-2"
-                    onclick="copyResultLink('{{ route('survey.public_detail', $survey->id) }}', this)">
+                    onclick="copyResultLink('{{ route('survey.public_detail', $survey->slug) }}', this)">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -168,23 +168,44 @@
     @push('scripts')
         <script>
             function copyResultLink(text, btn) {
+                if (!navigator.clipboard) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(btn);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
                 navigator.clipboard.writeText(text).then(() => {
-                    const originalContent = btn.innerHTML;
-                    btn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                        </svg>
-                        Tersalin!
-                    `;
-                    btn.classList.remove('btn-secondary');
-                    btn.classList.add('btn-success', 'text-white');
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalContent;
-                        btn.classList.remove('btn-success', 'text-white');
-                        btn.classList.add('btn-secondary');
-                    }, 2000);
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
                 });
+            }
+
+            function showCopySuccess(btn) {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    Tersalin!
+                `;
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-success', 'text-white');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('btn-success', 'text-white');
+                    btn.classList.add('btn-secondary');
+                }, 2000);
             }
         </script>
     @endpush

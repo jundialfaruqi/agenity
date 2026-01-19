@@ -207,16 +207,29 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="flex justify-center items-center gap-2">
-                                        <a href="{{ route('event.public_detail', $event) }}" target="_blank"
+                                        <a href="{{ route('event.public_detail', $event->slug) }}" target="_blank"
                                             class="btn btn-square btn-xs btn-ghost text-info tooltip"
                                             data-tip="Lihat Detail">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                 class="size-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                             </svg>
                                         </a>
+                                        <button type="button"
+                                            class="btn btn-square btn-xs btn-ghost text-secondary tooltip"
+                                            data-tip="Copy Public Link"
+                                            onclick="copyText('{{ route('event.public_detail', $event->slug) }}', this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                                            </svg>
+                                        </button>
                                         <a href="{{ route('event.edit', $event) }}"
                                             class="btn btn-square btn-xs btn-ghost text-warning tooltip"
                                             data-tip="Edit Event">
@@ -227,7 +240,7 @@
                                                     d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                             </svg>
                                         </a>
-                                        <button type="button" data-delete-id="{{ $event->id }}"
+                                        <button type="button" data-delete-id="{{ $event->uuid }}"
                                             data-delete-title="{{ $event->title }}"
                                             class="btn btn-square btn-xs btn-ghost text-error tooltip"
                                             data-tip="Hapus">
@@ -294,6 +307,43 @@
 
     @push('scripts')
         <script>
+            function copyText(text, btn) {
+                if (!navigator.clipboard) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(btn);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+
+            function showCopySuccess(btn) {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                `;
+                btn.classList.add('text-success');
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('text-success');
+                }, 2000);
+            }
+
             (function() {
                 const input = document.getElementById('event-search-input');
                 const box = document.getElementById('event-search-suggestions');
@@ -410,7 +460,7 @@
                     btn.addEventListener('click', function() {
                         const id = this.getAttribute('data-delete-id');
                         const title = this.getAttribute('data-delete-title') || '';
-                        deleteForm.setAttribute('action', `{{ url('/event') }}/${id}`);
+                        deleteForm.setAttribute('action', `{{ url('/event/delete') }}/${id}`);
                         deleteTitleEl.textContent = title;
                         if (deleteModal?.showModal) deleteModal.showModal();
                     });

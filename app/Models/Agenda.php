@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Agenda extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
+        'uuid',
         'master_opd_id',
         'user_id',
         'title',
@@ -48,6 +50,11 @@ class Agenda extends Model
         return $this->hasMany(AgendaSession::class);
     }
 
+    public function uniqueIds()
+    {
+        return ['uuid'];
+    }
+
     /**
      * Get the route key for the model.
      *
@@ -55,7 +62,7 @@ class Agenda extends Model
      */
     public function getRouteKeyName()
     {
-        return 'id';
+        return 'uuid';
     }
 
     public function getFirstImageAttribute()

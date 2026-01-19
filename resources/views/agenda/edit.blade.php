@@ -18,7 +18,7 @@
 
     <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body">
-            <form action="{{ route('agenda.update', $agenda->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('agenda.update', $agenda->uuid) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

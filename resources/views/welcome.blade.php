@@ -383,7 +383,7 @@
                                             <button class="btn btn-disabled btn-sm btn-block rounded-lg" disabled>Kuota
                                                 Penuh</button>
                                         @else
-                                            <a href="{{ route('survey.public_detail', $survey->id) }}"
+                                            <a href="{{ route('survey.public_detail', $survey->slug) }}"
                                                 class="btn btn-primary btn-sm btn-block rounded-lg">Ikuti Survei</a>
                                         @endif
                                     </div>
@@ -610,10 +610,33 @@
 
             function copyLink() {
                 const linkInput = document.getElementById('modal_absensi_link');
-                linkInput.select();
-                linkInput.setSelectionRange(0, 99999);
-                navigator.clipboard.writeText(linkInput.value);
+                const textToCopy = linkInput.value;
 
+                if (!navigator.clipboard) {
+                    // Fallback for non-HTTPS
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess();
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopySuccess();
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+
+            function showCopySuccess() {
                 const successMsg = document.getElementById('copy_success');
                 successMsg.classList.remove('opacity-0');
                 setTimeout(() => {

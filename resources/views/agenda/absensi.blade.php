@@ -15,7 +15,7 @@
                     {{ \Carbon\Carbon::parse($agenda->date)->format('d M Y') }}</p>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('agenda.export', $agenda->id) }}" class="btn btn-primary gap-2">
+                <a href="{{ route('agenda.export', $agenda->uuid) }}" class="btn btn-primary gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-5">
                         <path stroke-linecap="round" stroke-linejoin="round"

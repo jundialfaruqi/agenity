@@ -205,9 +205,9 @@ class LandingPageController extends Controller
         return view('event.public-detail', compact('event', 'upcomingEvents'));
     }
 
-    public function surveyDetail($id, Request $request)
+    public function surveyDetail(Survey $survey, Request $request)
     {
-        $survey = Survey::with(['questions.options', 'opd'])->findOrFail($id);
+        $survey->load(['questions.options', 'opd']);
 
         if ($survey->visibility === 'private') {
             return redirect()->route('welcome')->with('error', 'Survei ini bersifat privat.');
@@ -250,9 +250,9 @@ class LandingPageController extends Controller
         return view('survey.public_fill', compact('survey'));
     }
 
-    public function surveySubmit(Request $request, $id)
+    public function surveySubmit(Request $request, Survey $survey)
     {
-        $survey = Survey::with('questions')->findOrFail($id);
+        $survey->load('questions');
 
         // Check respondent quota before processing
         if ($survey->max_respondents && $survey->respondents()->count() >= $survey->max_respondents) {
