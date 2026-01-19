@@ -77,6 +77,7 @@ class AgendaService
 
     public function createAgenda(array $data): Agenda
     {
+        $data['slug'] = $this->generateUniqueSlug($data['title'], $data['date']);
         $agenda = Agenda::create($data);
 
         // Automatically create the first session
@@ -168,5 +169,25 @@ class AgendaService
                     'status' => $a->status,
                 ];
             });
+    }
+
+    /**
+     * Generate a unique slug for Agenda based on date and title.
+     * Format: {d-m-Y}/{slugified-title}
+     */
+    protected function generateUniqueSlug(string $title, string $date, ?int $excludeId = null): string
+    {
+        $formattedDate = \Carbon\Carbon::parse($date)->format('j-n-Y');
+        $baseSlug = Str::slug($title);
+        $slug = $formattedDate . '/' . $baseSlug;
+
+        // Check for uniqueness
+        $count = 1;
+        while (Agenda::where('slug', $slug)->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))->exists()) {
+            $slug = $formattedDate . '/' . $baseSlug . '-' . $count;
+            $count++;
+        }
+
+        return $slug;
     }
 }

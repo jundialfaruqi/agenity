@@ -160,7 +160,7 @@
                         <tbody>
                             @forelse ($upcomingAgendas as $agenda)
                                 <tr class="hover:bg-base-200 cursor-pointer transition-colors"
-                                    onclick="window.location='{{ route('agenda.public_detail', $agenda->id) }}'">
+                                    onclick="window.location='{{ route('agenda.public_detail', $agenda->slug) }}'">
                                     <td>
                                         <div class="flex items-center gap-3">
                                             <div class="avatar">

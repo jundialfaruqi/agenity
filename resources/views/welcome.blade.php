@@ -191,7 +191,7 @@
                                     <h2
                                         class="card-title text-xl mb-2 group-hover:text-secondary transition-colors line-clamp-2 min-h-14">
                                         <a
-                                            href="{{ route('agenda.public_detail', $agenda->id) }}">{{ $agenda->title }}</a>
+                                            href="{{ route('agenda.public_detail', $agenda->slug) }}">{{ $agenda->title }}</a>
                                     </h2>
                                     <div class="space-y-2 mb-6 grow">
                                         <div class="flex items-center gap-3 text-sm text-base-content/60 flex-wrap">
@@ -248,7 +248,7 @@
                                     </div>
                                     <div
                                         class="card-actions justify-between items-center mt-auto pt-4 border-t border-base-200">
-                                        <a href="{{ route('agenda.public_detail', $agenda->id) }}"
+                                        <a href="{{ route('agenda.public_detail', $agenda->slug) }}"
                                             class="btn btn-secondary btn-sm rounded-lg grow">Detail Agenda</a>
                                         @if ($agenda->sessions->count() > 0)
                                             <button type="button"
@@ -482,7 +482,7 @@
                                     <h2
                                         class="card-title text-xl mb-2 group-hover:text-secondary transition-colors line-clamp-2 min-h-14">
                                         <a
-                                            href="{{ route('event.public_detail', $event->id) }}">{{ $event->title }}</a>
+                                            href="{{ route('event.public_detail', $event->slug) }}">{{ $event->title }}</a>
                                     </h2>
                                     <div class="space-y-2 mb-6 grow">
                                         <div class="flex items-center gap-3 text-sm text-base-content/60 flex-wrap">
@@ -532,7 +532,7 @@
                                         </div>
                                         <div class="pt-4 border-t border-base-200">
                                             <div class="card-actions">
-                                                <a href="{{ route('event.public_detail', $event->id) }}"
+                                                <a href="{{ route('event.public_detail', $event->slug) }}"
                                                     class="btn btn-secondary btn-sm rounded-lg grow">Detail Event</a>
                                             </div>
                                         </div>

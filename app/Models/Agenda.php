@@ -13,6 +13,7 @@ class Agenda extends Model
         'master_opd_id',
         'user_id',
         'title',
+        'slug',
         'jenis_agenda',
         'visibility',
         'mode',
@@ -45,6 +46,16 @@ class Agenda extends Model
     public function sessions()
     {
         return $this->hasMany(AgendaSession::class);
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'id';
     }
 
     public function getFirstImageAttribute()

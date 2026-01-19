@@ -13,6 +13,7 @@ class Event extends Model
         'master_opd_id',
         'user_id',
         'title',
+        'slug',
         'jenis_event',
         'mode',
         'date',

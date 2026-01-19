@@ -430,10 +430,22 @@ class DatabaseSeeder extends Seeder
             ];
 
             foreach ($agendas as $aData) {
+                $formattedDate = \Carbon\Carbon::parse($aData['date'])->format('j-n-Y');
+                $baseSlug = Str::slug($aData['title']);
+                $slug = $formattedDate . '/' . $baseSlug;
+
+                // Simple uniqueness check for seeder
+                $count = 1;
+                while (\App\Models\Agenda::where('slug', $slug)->exists()) {
+                    $slug = $formattedDate . '/' . $baseSlug . '-' . $count;
+                    $count++;
+                }
+
                 $agenda = \App\Models\Agenda::create([
                     'master_opd_id' => $adminUser->opd_master_id,
                     'user_id' => $adminUser->id,
                     'title' => $aData['title'],
+                    'slug' => $slug,
                     'jenis_agenda' => $aData['jenis_agenda'],
                     'mode' => $aData['mode'],
                     'date' => $aData['date'],
@@ -488,18 +500,29 @@ class DatabaseSeeder extends Seeder
             ];
 
             foreach ($events as $eData) {
+                $formattedDate = \Carbon\Carbon::parse($eData['date'])->format('j-n-Y');
+                $baseSlug = Str::slug($eData['title']);
+                $slug = $formattedDate . '/' . $baseSlug;
+
+                // Simple uniqueness check for seeder
+                $count = 1;
+                while (\App\Models\Event::where('slug', $slug)->exists()) {
+                    $slug = $formattedDate . '/' . $baseSlug . '-' . $count;
+                    $count++;
+                }
+
                 \App\Models\Event::create([
                     'master_opd_id' => $adminUser->opd_master_id,
                     'user_id' => $adminUser->id,
                     'title' => $eData['title'],
+                    'slug' => $slug,
                     'jenis_event' => $eData['jenis_event'],
                     'mode' => $eData['mode'],
                     'date' => $eData['date'],
                     'start_time' => '09:00',
                     'end_time' => '12:00',
-                    'location' => $eData['mode'] === 'online' ? 'Zoom Meeting' : 'Aula Gedung Utama',
-                    'content' => '<p>Konten deskripsi untuk event ' . $eData['title'] . '.</p>',
-                    'catatan' => 'Harap hadir tepat waktu.',
+                    'location' => $eData['mode'] === 'online' ? 'Zoom Meeting' : 'Aula Lantai 1 Gedung Utama',
+                    'content' => '<p>Deskripsi contoh untuk event ' . $eData['title'] . '.</p>',
                     'status' => 'active',
                 ]);
             }

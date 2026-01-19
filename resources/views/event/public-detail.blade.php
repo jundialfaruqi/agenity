@@ -192,7 +192,7 @@
                         </div>
                         <div class="card-body p-4 space-y-4">
                             @forelse($upcomingEvents as $upcoming)
-                                <a href="{{ route('event.public_detail', $upcoming->id) }}"
+                                <a href="{{ route('event.public_detail', $upcoming->slug) }}"
                                     class="group block p-3 rounded-xl hover:bg-base-200 transition-all border border-transparent hover:border-base-300">
                                     <div class="flex gap-3">
                                         <div

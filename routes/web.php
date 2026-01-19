@@ -15,8 +15,6 @@ use App\Livewire\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('welcome');
-Route::get('/agenda-detail/{agenda}', [LandingPageController::class, 'showAgenda'])->name('agenda.public_detail');
-Route::get('/event-detail/{event}', [LandingPageController::class, 'showEvent'])->name('event.public_detail');
 
 // Public Survey
 Route::get('/survey/{id}/fill', [LandingPageController::class, 'surveyDetail'])->name('survey.public_detail');
@@ -82,6 +80,16 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(fu
     Route::post('/editor-upload', [UploadController::class, 'uploadImage'])->name('editor.upload');
     Route::post('/editor-delete', [UploadController::class, 'deleteImage'])->name('editor.delete');
 });
+
+// Public Agenda Detail
+Route::get('/agenda/{agenda:slug}', [LandingPageController::class, 'showAgenda'])
+    ->name('agenda.public_detail')
+    ->where('agenda', '.*');
+
+// Public Event Detail
+Route::get('/event/{event:slug}', [LandingPageController::class, 'showEvent'])
+    ->name('event.public_detail')
+    ->where('event', '.*');
 
 // Public Absensi Route
 Route::get('/absensi/{token}', [App\Http\Controllers\AbsensiController::class, 'show'])->name('absensi.show');

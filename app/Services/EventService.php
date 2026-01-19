@@ -73,11 +73,13 @@ class EventService
 
     public function createEvent(array $data): Event
     {
+        $data['slug'] = $this->generateUniqueSlug($data['title'], $data['date']);
         return Event::create($data);
     }
 
     public function updateEvent(Event $event, array $data): Event
     {
+        // Slug is permanent, do not update it here
         $event->update($data);
         return $event;
     }
@@ -119,5 +121,25 @@ class EventService
                     'status' => $e->status,
                 ];
             });
+    }
+
+    /**
+     * Generate a unique slug for Event based on date and title.
+     * Format: {d-m-Y}/{slugified-title}
+     */
+    protected function generateUniqueSlug(string $title, string $date, ?int $excludeId = null): string
+    {
+        $formattedDate = \Carbon\Carbon::parse($date)->format('j-n-Y');
+        $baseSlug = \Illuminate\Support\Str::slug($title);
+        $slug = $formattedDate . '/' . $baseSlug;
+
+        // Check for uniqueness
+        $count = 1;
+        while (Event::where('slug', $slug)->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))->exists()) {
+            $slug = $formattedDate . '/' . $baseSlug . '-' . $count;
+            $count++;
+        }
+
+        return $slug;
     }
 }
