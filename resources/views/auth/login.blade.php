@@ -72,7 +72,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('login.perform') }}" method="POST" class="space-y-2">
+                <form action="{{ route('login.perform') }}" method="POST" class="space-y-2" data-loading>
                     @csrf
                     <!-- Email -->
                     <div class="form-control mb-4">
@@ -149,7 +149,7 @@
                     <div class="form-control">
                         <button type="submit"
                             class="btn btn-secondary w-full text-white shadow-lg shadow-secondary/30 rounded-lg gap-2">
-
+                            <span class="loading loading-spinner loading-sm hidden"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="size-5">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -186,6 +186,7 @@
         });
     </script>
     <script src="{{ asset('js/theme-toggle.js') }}"></script>
+    <script src="{{ asset('js/global-loading.js') }}"></script>
 </body>
 
 </html>

@@ -89,6 +89,34 @@ class SurveyService
         return $question;
     }
 
+    public function updateQuestion(\App\Models\SurveyQuestion $question, array $data): bool
+    {
+        $updated = $question->update([
+            'question_text' => $data['question_text'],
+            'type' => $data['type'],
+            'is_required' => isset($data['is_required']),
+        ]);
+
+        if ($updated) {
+            // Re-sync options for choice questions
+            if (in_array($data['type'], ['single_choice', 'multiple_choice'])) {
+                $question->options()->delete();
+                if (isset($data['options'])) {
+                    foreach ($data['options'] as $optionText) {
+                        if (!empty($optionText)) {
+                            $question->options()->create(['option_text' => $optionText]);
+                        }
+                    }
+                }
+            } else {
+                // If type changed from choice to text/rating, delete old options
+                $question->options()->delete();
+            }
+        }
+
+        return $updated;
+    }
+
     public function deleteQuestion(\App\Models\SurveyQuestion $question): bool
     {
         return $question->delete();

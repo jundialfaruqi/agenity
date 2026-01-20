@@ -191,9 +191,10 @@
                             </a>
                         </li>
                         <li>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-2 cursor-pointer">
+                                <button type="button" onclick="logout_modal.showModal()"
+                                    class="flex items-center gap-2 cursor-pointer w-full text-left">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-4">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -208,4 +209,22 @@
             </div>
         </div>
     </aside>
+
+    <!-- Logout Confirmation Modal -->
+    <dialog id="logout_modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Konfirmasi Logout</h3>
+            <p class="py-4 text-base-content/70">Apakah Anda yakin ingin keluar dari sistem?</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Batal</button>
+                </form>
+                <button type="button" onclick="document.getElementById('logout-form').submit()"
+                    class="btn btn-error text-white">Logout</button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
 </div>

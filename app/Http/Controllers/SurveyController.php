@@ -113,21 +113,23 @@ class SurveyController extends Controller
         }
 
         $validated = $request->validate([
-            'opd_id' => 'required|exists:opd_masters,id',
-            'title' => 'required|string|max:255',
+            'opd_id' => 'sometimes|required|exists:opd_masters,id',
+            'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_date' => 'sometimes|required|date',
+            'end_date' => 'sometimes|required|date|after_or_equal:start_date',
             'max_respondents' => 'nullable|integer|min:1',
-            'visibility' => 'required|in:public,private',
+            'visibility' => 'sometimes|required|in:public,private',
         ]);
 
-        // Checkbox handling
-        $validated['is_active'] = $request->has('is_active');
+        // Checkbox handling - only if submitting settings form
+        if ($request->form_type === 'settings') {
+            $validated['is_active'] = $request->has('is_active');
+        }
 
         try {
             $service->updateSurvey($survey, $validated);
-            return redirect()->route('survey.index')->with('success', 'Survei berhasil diperbarui');
+            return back()->with('success', 'Survei berhasil diperbarui');
         } catch (\Throwable $e) {
             return back()->withInput()->with('error', $e->getMessage());
         }
@@ -165,6 +167,38 @@ class SurveyController extends Controller
         try {
             $service->addQuestion($survey, $validated);
             return back()->with('success', 'Pertanyaan berhasil ditambahkan');
+        } catch (\Throwable $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateQuestion(Request $request, SurveyService $service, \App\Models\SurveyQuestion $question): RedirectResponse
+    {
+        // Authorization check
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($user->hasRole('admin-opd')) {
+            if ($question->survey->created_by !== $user->id && $question->survey->opd_id !== $user->opd_master_id) {
+                abort(403, 'Anda tidak memiliki akses ke pertanyaan ini.');
+            }
+        }
+
+        try {
+            $validated = $request->validate([
+                'question_text' => 'required|string',
+                'type' => 'required|in:text,single_choice,multiple_choice,rating',
+                'is_required' => 'nullable',
+                'options' => 'nullable|array',
+                'options.*' => 'nullable|string',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            session()->flash('edit_question_id', $question->id);
+            throw $e;
+        }
+
+        try {
+            $service->updateQuestion($question, $validated);
+            return back()->with('success', 'Pertanyaan berhasil diperbarui');
         } catch (\Throwable $e) {
             return back()->withInput()->with('error', $e->getMessage());
         }

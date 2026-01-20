@@ -68,13 +68,14 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(fu
     Route::get('/survey/suggest', [SurveyController::class, 'suggest'])->name('survey.suggest')->middleware([RequireLogin::class, 'permission:view-survey']);
     Route::get('/survey/create', [SurveyController::class, 'create'])->name('survey.create')->middleware([RequireLogin::class, 'permission:add-survey']);
     Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store')->middleware([RequireLogin::class, 'permission:add-survey']);
-    Route::get('/survey/{survey}/edit', [SurveyController::class, 'edit'])->name('survey.edit')->middleware([RequireLogin::class, 'permission:edit-survey']);
+    Route::get('/survey/edit/{survey}', [SurveyController::class, 'edit'])->name('survey.edit')->middleware([RequireLogin::class, 'permission:edit-survey']);
     Route::put('/survey/{survey}', [SurveyController::class, 'update'])->name('survey.update')->middleware([RequireLogin::class, 'permission:edit-survey']);
     Route::delete('/survey/{survey}', [SurveyController::class, 'destroy'])->name('survey.destroy')->middleware([RequireLogin::class, 'permission:delete-survey']);
-    Route::post('/survey/{survey}/questions', [SurveyController::class, 'storeQuestion'])->name('survey.questions.store')->middleware([RequireLogin::class, 'permission:edit-survey']);
+    Route::post('/survey/questions/{survey}', [SurveyController::class, 'storeQuestion'])->name('survey.questions.store')->middleware([RequireLogin::class, 'permission:edit-survey']);
+    Route::put('/survey/questions/{question}', [SurveyController::class, 'updateQuestion'])->name('survey.questions.update')->middleware([RequireLogin::class, 'permission:edit-survey']);
     Route::delete('/survey/questions/{question}', [SurveyController::class, 'destroyQuestion'])->name('survey.questions.destroy')->middleware([RequireLogin::class, 'permission:edit-survey']);
-    Route::get('/survey/{survey}/results', [SurveyController::class, 'results'])->name('survey.results')->middleware([RequireLogin::class, 'permission:view-survey-result']);
-    Route::get('/survey/{survey}/export-pdf', [SurveyController::class, 'exportPdf'])->name('survey.export_pdf')->middleware([RequireLogin::class, 'permission:view-survey-result']);
+    Route::get('/survey/results/{survey}', [SurveyController::class, 'results'])->name('survey.results')->middleware([RequireLogin::class, 'permission:view-survey-result']);
+    Route::get('/survey/export-pdf/{survey}', [SurveyController::class, 'exportPdf'])->name('survey.export_pdf')->middleware([RequireLogin::class, 'permission:view-survey-result']);
 
     // Editor Upload
     Route::post('/editor-upload', [UploadController::class, 'uploadImage'])->name('editor.upload');

@@ -1,4 +1,48 @@
 <x-layout title="Edit Survei">
+    @if (session('success'))
+        <div id="success-toast" class="toast toast-top toast-end z-50 shadow-2xl rounded-xl">
+            <div class="alert glass backdrop-blur-lg border border-primary text-secondary font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M9 12l2 2 4-4M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        </div>
+        <script>
+            setTimeout(() => {
+                const toast = document.getElementById('success-toast');
+                if (toast) {
+                    toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                    setTimeout(() => toast.remove(), 500);
+                }
+            }, 3000);
+        </script>
+    @endif
+
+    @if (session('error'))
+        <div id="error-toast" class="toast toast-top toast-end z-50 shadow-2xl rounded-xl">
+            <div class="alert alert-error shadow-lg text-white font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>{{ session('error') }}</span>
+            </div>
+        </div>
+        <script>
+            setTimeout(() => {
+                const toast = document.getElementById('error-toast');
+                if (toast) {
+                    toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                    setTimeout(() => toast.remove(), 500);
+                }
+            }, 5000);
+        </script>
+    @endif
+
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
         <div>
             <h1 class="text-xl font-bold">Edit Survei: {{ $survey->title }}</h1>
@@ -20,9 +64,11 @@
             <div class="card bg-base-100 shadow border border-base-200">
                 <div class="card-body">
                     <h2 class="card-title text-lg mb-4">Detail Survei</h2>
-                    <form action="{{ route('survey.update', $survey) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('survey.update', $survey) }}" method="POST" class="space-y-6"
+                        data-loading="true" data-loading-text="Menyimpan...">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="form_type" value="details">
                         <div class="grid grid-cols-1 gap-6">
                             <div>
                                 <label class="label"><span class="label-text font-bold mb-2">Judul
@@ -44,8 +90,19 @@
                                 @enderror
                             </div>
 
-                            <div class="flex justify-end">
-                                <button type="submit" class="btn btn-secondary">Simpan Perubahan Detail</button>
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ route('survey.index') }}" class="btn btn-ghost">
+                                    Batal
+                                </a>
+                                <button type="submit" class="btn btn-secondary gap-2">
+                                    <span class="loading loading-spinner loading-sm hidden"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Simpan Perubahan Detail
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -94,16 +151,18 @@
                                         class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button type="button" class="btn btn-square btn-xs text-primary"
                                             onclick="openEditQuestionModal({{ json_encode($question) }})">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                             </svg>
                                         </button>
                                         <button onclick="delete_question_modal_{{ $question->id }}.showModal()"
                                             class="btn btn-square btn-xs text-error">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="size-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                             </svg>
@@ -112,7 +171,8 @@
                                         <dialog id="delete_question_modal_{{ $question->id }}" class="modal">
                                             <div class="modal-box">
                                                 <h3 class="font-bold text-lg">Konfirmasi Hapus</h3>
-                                                <p class="py-4">Apakah Anda yakin ingin menghapus pertanyaan ini? Data
+                                                <p class="py-4">Apakah Anda yakin ingin menghapus pertanyaan ini?
+                                                    Data
                                                     jawaban yang terkait juga akan terhapus.</p>
                                                 <div class="modal-action">
                                                     <form method="dialog">
@@ -148,9 +208,11 @@
             <div class="card bg-base-100 shadow border border-base-200">
                 <div class="card-body p-6">
                     <h2 class="card-title text-sm uppercase tracking-widest opacity-60 mb-4">Pengaturan Publikasi</h2>
-                    <form action="{{ route('survey.update', $survey) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('survey.update', $survey) }}" method="POST" class="space-y-6"
+                        data-loading="true" data-loading-text="Menyimpan...">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="form_type" value="settings">
                         {{-- Hidden fields to preserve detail data when updating sidebar --}}
                         <input type="hidden" name="title" value="{{ $survey->title }}">
 
@@ -164,6 +226,9 @@
                                             {{ $opd->singkatan }}</option>
                                     @endforeach
                                 </select>
+                                @error('opd_id')
+                                    <div class="mt-1 text-[10px] text-error">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div>
@@ -173,6 +238,9 @@
                                     <option value="public" @selected(old('visibility', $survey->visibility) === 'public')>Public</option>
                                     <option value="private" @selected(old('visibility', $survey->visibility) === 'private')>Private</option>
                                 </select>
+                                @error('visibility')
+                                    <div class="mt-1 text-[10px] text-error">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div>
@@ -181,6 +249,9 @@
                                 <input name="start_date" type="date"
                                     value="{{ old('start_date', $survey->start_date->format('Y-m-d')) }}"
                                     class="input input-bordered w-full input-sm" required>
+                                @error('start_date')
+                                    <div class="mt-1 text-[10px] text-error">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div>
@@ -189,6 +260,9 @@
                                 <input name="end_date" type="date"
                                     value="{{ old('end_date', $survey->end_date->format('Y-m-d')) }}"
                                     class="input input-bordered w-full input-sm" required>
+                                @error('end_date')
+                                    <div class="mt-1 text-[10px] text-error">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div>
@@ -201,6 +275,9 @@
                                 <div class="mt-1 text-[10px] text-base-content/50 italic text-center">Kosongkan jika
                                     tidak
                                     dibatasi.</div>
+                                @error('max_respondents')
+                                    <div class="mt-1 text-[10px] text-error">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-control">
@@ -213,8 +290,15 @@
 
                             <div class="divider"></div>
 
-                            <button type="submit" class="btn btn-secondary btn-block btn-sm">Perbarui
-                                Pengaturan</button>
+                            <button type="submit" class="btn btn-secondary btn-block btn-sm gap-2">
+                                <span class="loading loading-spinner loading-sm hidden"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                Perbarui Pengaturan
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -250,7 +334,7 @@
                                     class="input input-bordered input-sm join-item flex-1 bg-base-200" readonly
                                     id="public_link">
                                 <button class="btn btn-sm btn-secondary join-item"
-                                    onclick="copyToClipboard('public_link')">
+                                    onclick="copyToClipboard('public_link', this)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -270,7 +354,7 @@
                                         class="input input-bordered input-sm join-item flex-1 bg-base-200" readonly
                                         id="private_link">
                                     <button class="btn btn-sm btn-secondary join-item"
-                                        onclick="copyToClipboard('private_link')">
+                                        onclick="copyToClipboard('private_link', this)">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -295,51 +379,84 @@
         <div class="modal-box max-w-2xl">
             <h3 class="font-bold text-lg mb-4">Tambah Pertanyaan Baru</h3>
             <form action="{{ route('survey.questions.store', $survey) }}" method="POST" id="question_form"
-                class="space-y-4">
+                class="space-y-4" data-loading="true" data-loading-text="Menyimpan...">
                 @csrf
                 <input type="hidden" name="survey_id" value="{{ $survey->id }}">
 
                 <div>
                     <label class="label"><span class="label-text font-bold mb-2">Teks Pertanyaan</span></label>
                     <textarea name="question_text" class="textarea textarea-bordered w-full h-24"
-                        placeholder="Contoh: Bagaimana pendapat Anda tentang layanan kami?" required></textarea>
+                        placeholder="Contoh: Bagaimana pendapat Anda tentang layanan kami?" required>{{ old('question_text') }}</textarea>
+                    @error('question_text')
+                        <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="label"><span class="label-text font-bold mb-2">Tipe Pertanyaan</span></label>
                         <select name="type" class="select select-bordered w-full" id="question_type" required>
-                            <option value="text">Teks Jawaban Pendek</option>
-                            <option value="single_choice">Pilihan Tunggal (Radio)</option>
-                            <option value="multiple_choice">Pilihan Ganda (Checkbox)</option>
-                            <option value="rating">Rating (1-5)</option>
+                            <option value="text" @selected(old('type') == 'text')>Teks Jawaban Pendek</option>
+                            <option value="single_choice" @selected(old('type') == 'single_choice')>Pilihan Tunggal (Radio)</option>
+                            <option value="multiple_choice" @selected(old('type') == 'multiple_choice')>Pilihan Ganda (Checkbox)
+                            </option>
+                            <option value="rating" @selected(old('type') == 'rating')>Rating (1-5)</option>
                         </select>
+                        @error('type')
+                            <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="flex items-end pb-3">
                         <label class="label text-xs cursor-pointer justify-start gap-4">
                             <input type="checkbox" name="is_required" class="checkbox checkbox-xs checkbox-secondary"
-                                checked />
+                                @checked(old('is_required', true)) />
                             <span class="label-text font-bold">Wajib Diisi</span>
                         </label>
                     </div>
                 </div>
 
                 {{-- Container for Options (only shown for single/multiple choice) --}}
-                <div id="options_container" class="hidden space-y-3 p-4 bg-base-200 rounded-xl">
+                <div id="options_container"
+                    class="{{ in_array(old('type'), ['single_choice', 'multiple_choice']) ? '' : 'hidden' }} space-y-3 p-4 bg-base-200 rounded-xl">
                     <label class="label pt-0"><span class="label-text font-bold">Pilihan Jawaban</span></label>
                     <div id="options_list" class="space-y-2">
-                        <div class="flex gap-2">
-                            <input type="text" name="options[]" class="input input-bordered input-sm flex-1"
-                                placeholder="Pilihan 1">
-                            <button type="button" class="btn btn-sm btn-square btn-ghost text-error remove-option">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m14.74 9-.34 6m-4.74 6 4.74-6m4.74 6-4.74-6m4.74 6-4.74-6" />
-                                </svg>
-                            </button>
-                        </div>
+                        @if (old('options'))
+                            @foreach (old('options') as $index => $option)
+                                <div class="flex gap-2">
+                                    <input type="text" name="options[]"
+                                        class="input input-bordered input-sm flex-1"
+                                        placeholder="Pilihan {{ $index + 1 }}" value="{{ $option }}">
+                                    <button type="button"
+                                        class="btn btn-sm btn-square btn-ghost text-error remove-option">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="flex gap-2">
+                                <input type="text" name="options[]" class="input input-bordered input-sm flex-1"
+                                    placeholder="Pilihan 1">
+                                <button type="button"
+                                    class="btn btn-sm btn-square btn-ghost text-error remove-option">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>
+                                </button>
+                            </div>
+                        @endif
                     </div>
+                    @error('options')
+                        <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                    @enderror
+                    @error('options.*')
+                        <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                    @enderror
                     <button type="button" id="add_option_btn" class="btn btn-xs btn-ghost gap-2 text-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
@@ -350,8 +467,15 @@
                 </div>
 
                 <div class="modal-action">
-                    <button type="button" onclick="add_question_modal.close()" class="btn btn-ghost">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Pertanyaan</button>
+                    <button type="button" onclick="resetQuestionForm()" class="btn btn-ghost">Batal</button>
+                    <button type="submit" class="btn btn-secondary gap-2">
+                        <span class="loading loading-spinner loading-sm hidden"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Simpan Pertanyaan
+                    </button>
                 </div>
             </form>
         </div>
@@ -361,7 +485,8 @@
     <dialog id="edit_question_modal" class="modal">
         <div class="modal-box max-w-2xl">
             <h3 class="font-bold text-lg mb-4">Edit Pertanyaan</h3>
-            <form action="" method="POST" id="edit_question_form" class="space-y-4">
+            <form action="" method="POST" id="edit_question_form" class="space-y-4" data-loading="true"
+                data-loading-text="Menyimpan...">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="survey_id" value="{{ $survey->id }}">
@@ -369,7 +494,12 @@
                 <div>
                     <label class="label"><span class="label-text font-bold mb-2">Teks Pertanyaan</span></label>
                     <textarea name="question_text" id="edit_question_text" class="textarea textarea-bordered w-full h-24"
-                        placeholder="Contoh: Bagaimana pendapat Anda tentang layanan kami?" required></textarea>
+                        placeholder="Contoh: Bagaimana pendapat Anda tentang layanan kami?" required>{{ old('question_text') }}</textarea>
+                    @if (session('edit_question_id'))
+                        @error('question_text')
+                            <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                        @enderror
+                    @endif
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -382,6 +512,11 @@
                             <option value="multiple_choice">Pilihan Ganda (Checkbox)</option>
                             <option value="rating">Rating (1-5)</option>
                         </select>
+                        @if (session('edit_question_id'))
+                            @error('type')
+                                <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                            @enderror
+                        @endif
                     </div>
                     <div class="flex items-end pb-3">
                         <label class="label text-xs cursor-pointer justify-start gap-4">
@@ -398,6 +533,14 @@
                     <div id="edit_options_list" class="space-y-2">
                         {{-- Options will be populated by JS --}}
                     </div>
+                    @if (session('edit_question_id'))
+                        @error('options')
+                            <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                        @enderror
+                        @error('options.*')
+                            <div class="mt-1 text-xs text-error">{{ $message }}</div>
+                        @enderror
+                    @endif
                     <button type="button" id="edit_add_option_btn" class="btn btn-xs btn-ghost gap-2 text-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
@@ -409,7 +552,14 @@
 
                 <div class="modal-action">
                     <button type="button" onclick="edit_question_modal.close()" class="btn btn-base">Batal</button>
-                    <button type="submit" class="btn btn-secondary">Simpan Perubahan</button>
+                    <button type="submit" class="btn btn-secondary gap-2">
+                        <span class="loading loading-spinner loading-sm hidden"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                        </svg>
+                        Simpan Perubahan
+                    </button>
                 </div>
             </form>
         </div>
@@ -417,28 +567,83 @@
 
     @push('scripts')
         <script>
-            function copyToClipboard(elementId) {
-                const input = document.getElementById(elementId);
-                input.select();
-                input.setSelectionRange(0, 99999); // For mobile devices
-                navigator.clipboard.writeText(input.value).then(() => {
-                    // Show a small toast or change button state
-                    const btn = input.nextElementSibling;
-                    const originalContent = btn.innerHTML;
-                    btn.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                        </svg>
-                    `;
-                    btn.classList.remove('btn-secondary');
-                    btn.classList.add('btn-success');
+            function copyToClipboard(id, btn) {
+                const input = document.getElementById(id);
+                const text = input.value;
 
-                    setTimeout(() => {
-                        btn.innerHTML = originalContent;
-                        btn.classList.remove('btn-success');
-                        btn.classList.add('btn-secondary');
-                    }, 2000);
+                if (!navigator.clipboard) {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(btn);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                    return;
+                }
+
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    console.error('Async: Could not copy text: ', err);
                 });
+            }
+
+            function showCopySuccess(btn) {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                `;
+                btn.classList.add('btn-success');
+                btn.classList.remove('btn-secondary');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-secondary');
+                }, 2000);
+            }
+
+            function resetQuestionForm() {
+                const form = document.getElementById('question_form');
+                const optionsContainer = document.getElementById('options_container');
+                const optionsList = document.getElementById('options_list');
+
+                // Reset form basic fields
+                form.reset();
+
+                // Hide options container (default type is text)
+                optionsContainer.classList.add('hidden');
+
+                // Reset options list to only one empty option
+                optionsList.innerHTML = `
+                    <div class="flex gap-2">
+                        <input type="text" name="options[]" class="input input-bordered input-sm flex-1"
+                            placeholder="Pilihan 1">
+                        <button type="button"
+                            class="btn btn-sm btn-square btn-ghost text-error remove-option">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+
+                // Clear validation errors
+                const errorMessages = form.querySelectorAll('.text-error');
+                errorMessages.forEach(err => err.remove());
+
+                // Close modal
+                add_question_modal.close();
             }
 
             function openEditQuestionModal(question) {
@@ -552,6 +757,38 @@
                     }
                 });
             });
+
+            @if ($errors->has('question_text') || $errors->has('type') || $errors->has('options') || $errors->has('options.*'))
+                @if (session('edit_question_id'))
+                    @php
+                        $editQuestion = $survey->questions->find(session('edit_question_id'));
+                    @endphp
+                    @if ($editQuestion)
+                        @php
+                            // If there are old options, use them instead of the question's options
+if (old('options')) {
+    $oldOptions = collect(old('options'))->map(function ($text) {
+        return ['option_text' => $text];
+    });
+    $editQuestion->setRelation('options', $oldOptions);
+}
+// Use old question text and type if they exist
+if (old('question_text')) {
+    $editQuestion->question_text = old('question_text');
+}
+if (old('type')) {
+    $editQuestion->type = old('type');
+}
+if (old('is_required') !== null) {
+    $editQuestion->is_required = old('is_required');
+                            }
+                        @endphp
+                        openEditQuestionModal({!! json_encode($editQuestion) !!});
+                    @endif
+                @else
+                    add_question_modal.showModal();
+                @endif
+            @endif
         </script>
     @endpush
 </x-layout>
