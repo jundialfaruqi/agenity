@@ -5,9 +5,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\OpdMasterController;
+use App\Http\Controllers\DokumentasiController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\KategoriPakaianController;
+use App\Http\Controllers\PakaianController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\UploadController;
 use App\Http\Middleware\RequireLogin;
@@ -42,6 +45,32 @@ Route::middleware([RequireLogin::class, 'role:super-admin|admin-opd'])->group(fu
     Route::get('/master-opd/{opd}/edit', [OpdMasterController::class, 'edit'])->name('opd.edit')->middleware([RequireLogin::class, 'permission:edit-master-opd']);
     Route::put('/master-opd/{opd}', [OpdMasterController::class, 'update'])->name('opd.update')->middleware([RequireLogin::class, 'permission:edit-master-opd']);
     Route::delete('/master-opd/{opd}', [OpdMasterController::class, 'destroy'])->name('opd.destroy')->middleware([RequireLogin::class, 'permission:delete-master-opd']);
+
+    // Master Pakaian
+    Route::get('/master-pakaian/kategori', [KategoriPakaianController::class, 'index'])->name('kategori-pakaian.index')->middleware('permission:view-master-pakaian');
+    Route::get('/master-pakaian/kategori/suggest', [KategoriPakaianController::class, 'suggest'])->name('kategori-pakaian.suggest')->middleware('permission:view-master-pakaian');
+    Route::get('/master-pakaian/kategori/create', [KategoriPakaianController::class, 'create'])->name('kategori-pakaian.create')->middleware('permission:add-master-pakaian');
+    Route::post('/master-pakaian/kategori', [KategoriPakaianController::class, 'store'])->name('kategori-pakaian.store')->middleware('permission:add-master-pakaian');
+    Route::get('/master-pakaian/kategori/{uuid}/edit', [KategoriPakaianController::class, 'edit'])->name('kategori-pakaian.edit')->middleware('permission:edit-master-pakaian');
+    Route::put('/master-pakaian/kategori/{uuid}', [KategoriPakaianController::class, 'update'])->name('kategori-pakaian.update')->middleware('permission:edit-master-pakaian');
+    Route::delete('/master-pakaian/kategori/{uuid}', [KategoriPakaianController::class, 'destroy'])->name('kategori-pakaian.destroy')->middleware('permission:delete-master-pakaian');
+
+    Route::get('/master-pakaian/pakaian', [PakaianController::class, 'index'])->name('pakaian.index')->middleware('permission:view-master-pakaian');
+    Route::get('/master-pakaian/pakaian/suggest', [PakaianController::class, 'suggest'])->name('pakaian.suggest')->middleware('permission:view-master-pakaian');
+    Route::get('/master-pakaian/pakaian/create', [PakaianController::class, 'create'])->name('pakaian.create')->middleware('permission:add-master-pakaian');
+    Route::post('/master-pakaian/pakaian', [PakaianController::class, 'store'])->name('pakaian.store')->middleware('permission:add-master-pakaian');
+    Route::get('/master-pakaian/pakaian/{uuid}/edit', [PakaianController::class, 'edit'])->name('pakaian.edit')->middleware('permission:edit-master-pakaian');
+    Route::put('/master-pakaian/pakaian/{uuid}', [PakaianController::class, 'update'])->name('pakaian.update')->middleware('permission:edit-master-pakaian');
+    Route::delete('/master-pakaian/pakaian/{uuid}', [PakaianController::class, 'destroy'])->name('pakaian.destroy')->middleware('permission:delete-master-pakaian');
+
+    // Dokumentasi
+    Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi.index')->middleware('permission:view-dokumentasi');
+    Route::get('/dokumentasi/suggest', [DokumentasiController::class, 'suggest'])->name('dokumentasi.suggest')->middleware('permission:view-dokumentasi');
+    Route::get('/dokumentasi/create', [DokumentasiController::class, 'create'])->name('dokumentasi.create')->middleware('permission:add-dokumentasi');
+    Route::post('/dokumentasi', [DokumentasiController::class, 'store'])->name('dokumentasi.store')->middleware('permission:add-dokumentasi');
+    Route::get('/dokumentasi/{uuid}/edit', [DokumentasiController::class, 'edit'])->name('dokumentasi.edit')->middleware('permission:edit-dokumentasi');
+    Route::put('/dokumentasi/{uuid}', [DokumentasiController::class, 'update'])->name('dokumentasi.update')->middleware('permission:edit-dokumentasi');
+    Route::delete('/dokumentasi/{uuid}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy')->middleware('permission:delete-dokumentasi');
 
     // Agenda Master
     Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index')->middleware([RequireLogin::class, 'permission:view-agenda']);

@@ -123,6 +123,18 @@ class DatabaseSeeder extends Seeder
                 'edit-event',
                 'delete-event',
             ],
+            'master-pakaian' => [
+                'view-master-pakaian',
+                'add-master-pakaian',
+                'edit-master-pakaian',
+                'delete-master-pakaian',
+            ],
+            'dokumentasi' => [
+                'view-dokumentasi',
+                'add-dokumentasi',
+                'edit-dokumentasi',
+                'delete-dokumentasi',
+            ],
         ];
 
         foreach ($permissions as $group => $permissionList) {
@@ -176,9 +188,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info('✔ Example permissions synced to User Example Role.');
 
         // Sync agenda, survey & event permissions to Admin OPD Role
-        $adminOpdPermissions = Permission::whereIn('group', ['agenda', 'survey', 'event'])->get();
+        $adminOpdPermissions = Permission::whereIn('group', ['agenda', 'survey', 'event', 'master-pakaian', 'dokumentasi'])->get();
         $adminOpdRole->syncPermissions($adminOpdPermissions);
-        $this->command->info('✔ Agenda, Survey & Event permissions synced to Admin OPD Role.');
+        $this->command->info('✔ Agenda, Survey, Event, Master Pakaian & Dokumentasi permissions synced to Admin OPD Role.');
 
         // 4. Create OPD Masters
         $this->command->newLine();
@@ -525,6 +537,15 @@ class DatabaseSeeder extends Seeder
 
             $this->command->info('✔ 3 Sample events created.');
         }
+
+        // 10. Master Pakaian
+        $this->command->newLine();
+        $this->command->comment('Step 10: Seeding Master Pakaian...');
+        $this->call([
+            KategoriPakaianSeeder::class,
+            PakaianSeeder::class,
+        ]);
+        $this->command->info('✔ Master Pakaian seeded successfully.');
 
         $this->command->newLine();
         $this->command->info('✨ Database Seeding Completed Successfully! ✨');

@@ -12,23 +12,33 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('events', 'uuid')) {
-            Schema::table('events', function (Blueprint $table) {
-                $table->uuid('uuid')->nullable()->after('id');
-            });
-        }
+        // 1. Add uuid column as nullable first
+        Schema::table('events', function (Blueprint $table) {
+            $table->uuid('uuid')->nullable()->after('id');
+        });
 
-        // Generate UUIDs for existing records
-        $events = DB::table('events')->whereNull('uuid')->orWhere('uuid', '')->get();
+        // 2. Generate UUIDs for existing records
+        $events = DB::table('events')->whereNull('uuid')->get();
         foreach ($events as $event) {
             DB::table('events')
                 ->where('id', $event->id)
                 ->update(['uuid' => (string) \Illuminate\Support\Str::uuid()]);
         }
 
+        // 3. Add unique constraint and make it not null
+        // Using multiple steps for better compatibility with PostgreSQL
         Schema::table('events', function (Blueprint $table) {
-            $table->uuid('uuid')->nullable(false)->unique()->change();
+            $table->unique('uuid');
         });
+
+        // Use raw SQL for making it NOT NULL to avoid potential 'change()' issues in some PG versions/configs
+        if (config('database.default') === 'pgsql') {
+            DB::statement('ALTER TABLE events ALTER COLUMN uuid SET NOT NULL');
+        } else {
+            Schema::table('events', function (Blueprint $table) {
+                $table->uuid('uuid')->nullable(false)->change();
+            });
+        }
     }
 
     /**

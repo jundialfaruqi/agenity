@@ -90,6 +90,23 @@
                     </li>
                 @endcan
 
+                @can('view-dokumentasi')
+                    <li>
+                        <a wire:navigate href="{{ route('dokumentasi.index') }}"
+                            class="{{ request()->routeIs('dokumentasi.*') ? 'active bg-base-200 text-base-content font-medium' : '' }} flex flex-col items-start gap-0.5">
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                                <span>Dokumentasi</span>
+                            </div>
+                            <span class="text-[8px] text-base-content opacity-50 ml-7">Manajemen dokumentasi Rapat</span>
+                        </a>
+                    </li>
+                @endcan
+
                 <li class="menu-title text-xs font-semibold opacity-50 uppercase mt-4 mb-1">Settings</li>
 
                 @role(['super-admin', 'admin'])
@@ -139,10 +156,39 @@
                     </li>
                 @endcan
 
+                @can('view-master-pakaian')
+                    <li>
+                        <details
+                            {{ request()->routeIs('kategori-pakaian.*') || request()->routeIs('pakaian.*') ? 'open' : '' }}>
+                            <summary class="group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                                Master Pakaian
+                            </summary>
+                            <ul>
+                                <li>
+                                    <a wire:navigate href="{{ route('kategori-pakaian.index') }}"
+                                        class="{{ request()->routeIs('kategori-pakaian.*') ? 'active bg-base-200 text-base-content font-medium' : '' }}">
+                                        Kategori Pakaian
+                                    </a>
+                                </li>
+                                <li>
+                                    <a wire:navigate href="{{ route('pakaian.index') }}"
+                                        class="{{ request()->routeIs('pakaian.*') ? 'active bg-base-200 text-base-content font-medium' : '' }}">
+                                        Pakaian
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                @endcan
                 <li class="mt-4">
                     <a class="text-secondary font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V19.5m0 2.25l-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
                         </svg>

@@ -254,7 +254,7 @@
                             <span class="text-sm font-medium">Active Account</span>
                         </div>
                         <p class="text-xs text-base-content/50 mt-2">Akun Anda aktif dan memiliki akses penuh ke fitur
-                            Monetra.</p>
+                            {{ $appSetting->app_name ?? config('app.name') }}.</p>
                     </div>
                 </div>
             </div>
