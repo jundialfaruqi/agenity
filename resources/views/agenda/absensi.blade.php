@@ -12,7 +12,7 @@
                 </div>
                 <h1 class="text-2xl font-bold text-base-content">Data Absensi: {{ $agenda->title }}</h1>
                 <p class="text-base-content/60">{{ $agenda->opdMaster->name }} |
-                    {{ \Carbon\Carbon::parse($agenda->date)->format('d M Y') }}</p>
+                    {{ \Carbon\Carbon::parse($agenda->date)->translatedFormat('d M Y') }}</p>
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('agenda.export', $agenda->uuid) }}" class="btn btn-primary gap-2">

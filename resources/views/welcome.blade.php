@@ -311,7 +311,8 @@
                         </div>
                     </div>
                 @else
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="zoom-in"
+                        data-aos-anchor-placement="top-center">
                         @foreach ($surveys as $survey)
                             <div
                                 class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group flex flex-col h-full">
@@ -431,7 +432,8 @@
                         </div>
                     </div>
                 @else
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="zoom-in"
+                        data-aos-anchor-placement="top-center">
                         @foreach ($events as $event)
                             <div
                                 class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200 group flex flex-col h-full overflow-hidden">

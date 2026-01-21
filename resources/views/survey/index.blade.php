@@ -196,11 +196,11 @@
                                     <div class="flex flex-col gap-1">
                                         <div class="flex items-center gap-2 text-xs">
                                             <span class="badge badge-sm badge-ghost">Mulai</span>
-                                            <span>{{ $survey->start_date->format('d M Y') }}</span>
+                                            <span>{{ $survey->start_date->translatedFormat('d M Y') }}</span>
                                         </div>
                                         <div class="flex items-center gap-2 text-xs text-error font-medium">
                                             <span class="badge badge-sm badge-error text-white">Selesai</span>
-                                            <span>{{ $survey->end_date->format('d M Y') }}</span>
+                                            <span>{{ $survey->end_date->translatedFormat('d M Y') }}</span>
                                         </div>
                                     </div>
                                 </td>

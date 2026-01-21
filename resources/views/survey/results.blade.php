@@ -98,8 +98,17 @@
                         <div>
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="badge badge-neutral badge-sm">{{ $loop->iteration }}</span>
+                                @php
+                                    $typeLabels = [
+                                        'text' => 'Teks Jawaban',
+                                        'single_choice' => 'Pilihan Tunggal',
+                                        'multiple_choice' => 'Pilihan Ganda',
+                                        'rating' => 'Rating / Skala',
+                                    ];
+                                    $displayType = $typeLabels[$result['type']] ?? str_replace('_', ' ', $result['type']);
+                                @endphp
                                 <span
-                                    class="badge badge-ghost badge-sm uppercase text-[10px] font-bold">{{ str_replace('_', ' ', $result['type']) }}</span>
+                                    class="badge badge-ghost badge-sm uppercase text-[10px] font-bold">{{ $displayType }}</span>
                             </div>
                             <h3 class="text-lg font-bold">{{ $result['text'] }}</h3>
                         </div>

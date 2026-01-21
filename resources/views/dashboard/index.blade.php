@@ -189,7 +189,7 @@
                                     </td>
                                     <td>
                                         <div class="text-xs font-semibold">
-                                            {{ \Carbon\Carbon::parse($agenda->date)->format('d M Y') }}</div>
+                                            {{ \Carbon\Carbon::parse($agenda->date)->translatedFormat('d M Y') }}</div>
                                         <div class="text-[10px] opacity-60">
                                             {{ \Carbon\Carbon::parse($agenda->start_time)->format('H:i') }} -
                                             {{ \Carbon\Carbon::parse($agenda->end_time)->format('H:i') }}</div>

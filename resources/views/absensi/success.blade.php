@@ -178,10 +178,11 @@
     </div>
     <script>
         function copyToClipboard(text, btn) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalContent = btn.innerHTML;
+            const originalContent = btn.innerHTML;
+
+            function showSuccess() {
                 btn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                     Copied
@@ -194,10 +195,49 @@
                     btn.classList.remove('btn-success', 'text-white');
                     btn.classList.add('btn-outline');
                 }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                alert('Gagal menyalin link');
-            });
+            }
+
+            // Try modern Clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showSuccess();
+                }).catch(err => {
+                    console.error('Modern Clipboard API failed: ', err);
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                // Fallback to execCommand for mobile/non-secure
+                fallbackCopyTextToClipboard(text);
+            }
+
+            function fallbackCopyTextToClipboard(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                
+                // Ensure it's not visible and doesn't scroll the page
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showSuccess();
+                    } else {
+                        console.error('Fallback copy failed');
+                        alert('Gagal menyalin link');
+                    }
+                } catch (err) {
+                    console.error('Fallback error: ', err);
+                    alert('Gagal menyalin link');
+                }
+
+                document.body.removeChild(textArea);
+            }
         }
     </script>
 </body>

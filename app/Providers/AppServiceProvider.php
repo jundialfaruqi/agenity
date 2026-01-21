@@ -28,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set locale to Indonesia
+        config(['app.locale' => 'id']);
+        \Carbon\Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+
         Scramble::afterOpenApiGenerated(function (OpenApi $openApi) {
             $openApi->secure(
                 SecurityScheme::http('bearer')
