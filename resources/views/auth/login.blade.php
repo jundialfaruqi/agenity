@@ -77,12 +77,12 @@
                     <!-- Email -->
                     <div class="form-control mb-4">
                         <label class="label mb-2">
-                            <span class="label-text font-medium">Email Address</span>
+                            <span class="label-text font-medium text-base-content/60">Email Address</span>
                         </label>
                         <div class="relative">
                             <input type="email" name="email" value="{{ old('email') }}"
                                 placeholder="name@example.com"
-                                class="input input-bordered w-full pl-10 rounded-lg h-11" />
+                                class="input input-bordered w-full pl-10 rounded-lg h-11 text-base-content/60" />
                             <span
                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-base-content/60">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -102,11 +102,11 @@
                     <!-- Password -->
                     <div class="form-control mb-6">
                         <label class="label mb-2">
-                            <span class="label-text font-medium">Password</span>
+                            <span class="label-text font-medium text-base-content/60">Password</span>
                         </label>
                         <div class="relative">
                             <input type="password" name="password" id="password-input" placeholder="••••••••"
-                                class="input input-bordered w-full pl-10 pr-10 rounded-lg h-11" />
+                                class="input input-bordered w-full pl-10 pr-10 rounded-lg h-11 text-base-content/60" />
                             <span
                                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-base-content/60">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -139,7 +139,8 @@
                             <span class="text-error text-xs mt-1">{{ $message }}</span>
                         @enderror
                         <label class="label justify-end mt-2">
-                            <a href="#" class="label-text-alt link link-hover font-medium underline">
+                            <a href="#"
+                                class="label-text-alt link link-hover font-medium underline text-base-content/60">
                                 Forgot password?
                             </a>
                         </label>
